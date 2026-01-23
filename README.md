@@ -4,6 +4,8 @@
 
 Hello_Eliza is a deliberately constrained conversational website. It responds to text input using pattern matching and simple state—not machine learning—by design.
 
+![Screenshot](screenshot.png)
+
 The project explores how hidden mechanics shape behavior. Intermittent reinforcement drives engagement (and addiction). Conversational interfaces invite trust (and misplaced belief). Systems that obscure how they work can manipulate; systems that expose how they work can teach. **Hello_Eliza uses the same techniques—and then shows you the seams.**
 
 This is not a critique from the outside. ELIZA fooled therapists in 1966 with a lookup table. The same pattern-matching logic powers slot machines, engagement algorithms, and the uncanny valley where correlation is mistaken for understanding. The difference here is not sophistication, but consent.
@@ -11,8 +13,6 @@ This is not a critique from the outside. ELIZA fooled therapists in 1966 with a 
 Inspired by ELIZA, Zork, Myst, and the early web, this repository is both a working web application (ASP.NET Core MVC, vanilla JavaScript) and a self-documenting artifact. Design decisions are annotated in code; when asked, the system explains itself.
 
 Essays will follow on interface design, human-in-the-loop systems, and the gap between *"I don't understand this"* and *"this was built so I wouldn't."*
-
-![Screenshot](screenshot.png)
 
 ---
 
