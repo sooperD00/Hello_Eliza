@@ -83,20 +83,60 @@ Views/_ViewImports.cshtml:@using Hell0_Web.Models
 >>it works
 
 Write some damn good copy
-- [ ] no exclamation points
-- [ ] zork opener, with gibson/nicole flavor sprinkles
-- [ ] drop text-muted and small
-- [ ] some .lead in my css
-- [ ] 
-- [ ] 
-- [ ] 
+- [x] no exclamation points
+- [x] zork opener, with gibson/nicole flavor sprinkles
+- [x] drop text-muted and small
+- [x] some .lead in my css
+- [x] my corner of the internet
+- [x] dotnet run
+>>it's nice
+
+Scaffold Zork + Blog for tomorrow
+- [x] ```bash
+# Models
+mv Essay.cs Hello_Eliza/Models/
+
+# Controllers
+mv EssayController.cs Hello_Eliza/Controllers/
+
+# Views - create Essay folder first
+mkdir Hello_Eliza/Views/Essay
+mv Index.cshtml Hello_Eliza/Views/Essay/
+mv Detail.cshtml Hello_Eliza/Views/Essay/
+
+# Content - essays live here
+mkdir -p Hello_Eliza/Content/Essays
+mv memes-for-moloch-1.md Hello_Eliza/Content/Essays/
+
+# wwwroot - static files
+mv zork.css Hello_Eliza/wwwroot/css/
+mv zork.js Hello_Eliza/wwwroot/js/
+mkdir Hello_Eliza/wwwroot/data
+mv zork-rules.json Hello_Eliza/wwwroot/data/
+
+# Root level docs
+# ZORK_CHECKLIST.md stays at repo root (or delete if you prefer)
+# screenshot_hell0_web.png - keep or delete, your call
+```
 - [ ] 
 - [ ] 
 
 - [ ] commit
 
-- [ ] 
-- [ ] 
+# Next Time You Come By 1/??/2026
+- [ ] Fix namespaces in Essay.cs and EssayController.cs (Hell0_Web → Hello_Eliza)
+- [ ] Get what you need out of ZORK_CHECKLIST.md into here and delete the file
+- [ ] Add routes in Program.cs for /essays
+- [ ] Add to _Layout.cshtml:
+```html
+<link rel="stylesheet" href="~/css/zork.css" />
+<script src="~/js/zork.js"></script>
+```
+- [ ] Test the state machine — type three times, watch it turn
+- [ ] Make something special for Crawford
+- [ ] commit
+
+
 - [ ] 
 - [ ] 
 - [ ] 

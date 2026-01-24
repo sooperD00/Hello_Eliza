@@ -1,0 +1,136 @@
+@model Hell0_Web.Models.Essay
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<article class="essay-detail">
+    <header class="essay-header">
+        <time class="essay-date">@Model.Date.ToString("yyyy.MM.dd")</time>
+        <h1 class="essay-title">@Model.Title</h1>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <p class="essay-subtitle">@Model.Description</p>
+        }
+    </header>
+    
+    <div class="essay-content">
+        @Html.Raw(Model.Content)
+    </div>
+    
+    <footer class="essay-footer">
+        <a href="/essays" class="back-link">← all essays</a>
+        <a href="/" class="back-link">← terminal</a>
+    </footer>
+</article>
+
+<style>
+    .essay-detail {
+        max-width: 650px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .essay-header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    
+    .essay-header .essay-date {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--neon-purple, #a855f7);
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    
+    .essay-header .essay-title {
+        font-size: 2rem;
+        color: #eee;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.2;
+    }
+    
+    .essay-subtitle {
+        color: #888;
+        font-size: 1.1rem;
+        margin: 0;
+        font-style: italic;
+    }
+    
+    /* Content styling - cleaner for reading */
+    .essay-content {
+        color: #ccc;
+        line-height: 1.7;
+        font-size: 1.05rem;
+    }
+    
+    .essay-content h2 {
+        color: var(--neon-cyan, #0ff);
+        font-size: 1.4rem;
+        margin: 2rem 0 1rem 0;
+    }
+    
+    .essay-content h3 {
+        color: #ddd;
+        font-size: 1.2rem;
+        margin: 1.5rem 0 0.75rem 0;
+    }
+    
+    .essay-content p {
+        margin: 1rem 0;
+    }
+    
+    .essay-content a {
+        color: var(--neon-cyan, #0ff);
+        text-decoration: underline;
+    }
+    
+    .essay-content blockquote {
+        border-left: 3px solid var(--neon-purple, #a855f7);
+        margin: 1.5rem 0;
+        padding: 0.5rem 0 0.5rem 1.5rem;
+        color: #aaa;
+        font-style: italic;
+    }
+    
+    .essay-content code {
+        font-family: monospace;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0.15rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.9em;
+    }
+    
+    .essay-content pre {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        overflow-x: auto;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+    
+    .essay-content pre code {
+        background: none;
+        padding: 0;
+    }
+    
+    .essay-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(0, 255, 255, 0.2);
+        display: flex;
+        gap: 2rem;
+    }
+    
+    .essay-footer .back-link {
+        color: var(--neon-purple, #a855f7);
+        text-decoration: none;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+    
+    .essay-footer .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
