@@ -1,19 +1,21 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- hierarchy = later files override earlier ones -->
+    <!-- fonts first convention -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Hello_Eliza</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Hello_Eliza.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">  <!-- Google Font (just loads the font, no conflicts) -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />  <!-- Bootstrap (base) -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />    <!-- site.css (your overrides) -->
+    <link rel="stylesheet" href="~/Hello_Eliza.styles.css" asp-append-version="true" />  <!-- Hello_Eliza.styles.css (scoped component styles) -->    
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hello_Eliza</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Ascii" asp-action="Input">Hello_Eliza</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,10 +23,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ascii" asp-action="Input">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Ascii" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
@@ -37,10 +39,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Hello_Eliza - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer class="text-center mt-5 pb-3" style="color: #666677; font-size: 0.9em; font-family: 'Courier New', monospace;">
+        © 2026 Hello_Eliza | No user data harvested, no ICE deployed, no Turing cops called |
+        <a href="https://github.com/sooperD00/Hello_Eliza" style="color: #00ffff; text-decoration: none;">[ View Source ]</a>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

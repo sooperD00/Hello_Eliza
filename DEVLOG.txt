@@ -1,28 +1,100 @@
-# Hello_Eliza 1/23/2026 - ????????
+Nicole Rowsey 1/23/2026 - ????????
+# Hello_Eliza
 
+
+# View it, Furball
+- [ ] cd Hello_Eliza/Hello_Eliza/
+- [ ] dotnet run
+- [ ] http://localhost:5103
+
+
+---
 
 # Init 1/23/2026
+
 Repo Root
-- [x] mkdir Hello_Eliza
-- [x] cd Hello_Eliza
-- [x] git clone path/to/Hell0_Web.git
+- [x] ```bash
+mkdir Hello_Eliza
+cd Hello_Eliza
+git clone path/to/Hell0_Web.git
+```
+
 New Project (new VS version, get all the updates, new build)
-- [ ] dotnet new mvc -n Hello_Eliza
+- [x] ```bash
+dotnet new mvc -n Hello_Eliza
 dotnet new xunit -n Hello_Eliza.Tests
-- [ ] dotnet new sln
-- [ ] dotnet sln add Hello_Eliza/Hello_Eliza.csproj
+dotnet new sln
+dotnet sln add Hello_Eliza/Hello_Eliza.csproj
 dotnet sln add Hello_Eliza.Tests/Hello_Eliza.Tests.csproj
+```
+
+Add Packages (use nuget)
+- [x] ```bash
+cd Hello_Eliza  (~/source/repos/Hello_Eliza/Hello_Eliza)
+dotnet add package Hell0_TDD.Core
+dotnet add package Markdig
+dotnet add package YamlDotNet
+```
+
+Copy over from Hell0_Web
+- [x] ```
+Controllers/*   # AsciiController.cs
+Models/* 	# AsciiInputModel.cs, ErrorViewModel.cs, MaxLengthAttribute.cs
+Views/Ascii/*	# Input.cshtml, Privacy.cshtml
+wwwroot/css/*	# site.css
+```
+- [x] diff Hell0_Web/Program.css Hello_Eliza/Program.css
+keep new template .NET 9 `MapStaticAssets()` pattern
+update `pattern: "{controller=Ascii}/{action=Input}/{id?}")` to use your home page
+- [x] commit
+
+Run it, furball
+- [x] ```bash
+cd Hello_Eliza/Hello_Eliza
+dotnet run
+``` >>it works!!!
+
+Fix the namespaces
+>>Find (looks good!)
+- [x] grep -r "Hell0_Web" --include="*.cs" --include="*.cshtml"
+Barac0da@DESKTOP-BJ2JKDO MINGW64 ~/source/repos/Hello_Eliza/Hello_Eliza (main)
+$ grep -r "Hell0_Web" --include="*.cs" --include="*.cshtml"
+Controllers/AsciiController.cs:﻿using Hell0_Web.Models;
+Controllers/AsciiController.cs:namespace Hell0_Web.Controllers
+Models/AsciiInputModel.cs:namespace Hell0_Web.Models
+Models/ErrorViewModel.cs:namespace Hell0_Web.Models
+Models/MaxLengthAttribute.cs:namespace Hell0_Web.Models
+Views/Ascii/Input.cshtml:@model Hell0_Web.Models.AsciiInputModel
+Views/Ascii/Input.cshtml:    <h2>Hell0_Web!!!</h2>
+Views/Shared/_Layout.cshtml:    <title>@ViewData["Title"] - Hell0_Web</title>
+Views/Shared/_Layout.cshtml:    <link rel="stylesheet" href="~/Hell0_Web.styles.css" asp-append-version="true" />
+Views/Shared/_Layout.cshtml:                <a class="navbar-brand" asp-area="" asp-controller="Ascii" asp-action="Input">Hell0_Web</a>
+Views/Shared/_Layout.cshtml:        © 2025 Hell0_Web | No user data harvested, no ICE deployed, no Turing cops called |
+Views/Shared/_Layout.cshtml:        <a href="https://github.com/sooperD00/Hell0_Web" style="color: #00ffff; text-decoration: none;">[ View Source ]</a>
+Views/_ViewImports.cshtml:﻿@using Hell0_Web
+Views/_ViewImports.cshtml:@using Hell0_Web.Models
+>>Replace
+- [x] find . -type f \( -name "*.cs" -o -name "*.cshtml" \) -exec sed -i 's/Hell0_Web/Hello_Eliza/g' {} +
+>>Check (blank - good!)
+- [x] grep -r "Hell0_Web" --include="*.cs" --include="*.cshtml"
+>>Check other file names just in case (blank - good!)
+- [x] grep -r "Hell0_Web" --include="*.csproj" --include="*.json" --include="*.css" --include="*.js" --include="*.md" --include="*.sln"
+- [x] dotnet build
+>>it works
+
+Write some damn good copy
+- [ ] no exclamation points
+- [ ] zork opener, with gibson/nicole flavor sprinkles
+- [ ] drop text-muted and small
+- [ ] some .lead in my css
 - [ ] 
 - [ ] 
 - [ ] 
 - [ ] 
 - [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
+
+- [ ] commit
+
 - [ ] 
 - [ ] 
 - [ ] 

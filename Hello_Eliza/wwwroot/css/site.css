@@ -1,31 +1,110 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* ASCII Art Generator Styles */
 body {
-  margin-bottom: 60px;
+    background-color: #0a0a0a; /* deep black */
+    color: #c0c0c0; /* dead channel gray */
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Errors */
+.text-danger {
+    color: #ff0066 !important; /* blood red for errors */
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* Privacy Page */
+.privacy-text {
+    color: #8888aa;
 }
+
+.privacy-footnote {
+    color: #666677;
+    font-size: 0.9em;
+    margin-top: 30px;
+}
+
+/* ASCII Page */
+.ascii-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #1a1a1a; /* rain-slick black */
+    border: 1px solid #00ffff; /* electric cyan */
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* neon glow */
+}
+
+    .ascii-container h2 {
+        margin-bottom: 10px;
+        color: #00ffff; /* electric cyan */
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        font-family: 'Courier New', monospace;
+    }
+
+    .ascii-container .zork-intro {
+        font-family: 'VT323', monospace; /* retro terminal vibe - heavier bitmap fonts — chunky */
+        font-size: 1.4rem; /* VT323 runs small, bump it up */
+    }
+
+        .ascii-container .zork-intro em {
+            font-size: 1.15em; /* slightly larger for emphasis - 1.1em for subtle, 1.2em for more obvious.*/
+        }
+
+    .ascii-container .text-muted {
+        color: #6c757d !important; /* bootstrap's old muted gray from v5 */
+    }
+    
+    .ascii-container input[type="text"]::placeholder {
+        color: #00ff00;
+        opacity: 0.6;
+    }
+    .ascii-container input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        background-color: #0d0d0d;
+        border: 1px solid #ff00ff; /* electric purple */
+        color: #00ff00; /* acidic green */
+        font-family: 'Courier New', monospace;
+    }
+
+        .ascii-container input[type="text"]:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+    .ascii-container button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #ff0066; /* blood red */
+        border: 1px solid #ff0066;
+        color: #ffffff;
+        font-family: 'Courier New', monospace;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .ascii-container button:hover {
+            background-color: #cc0052;
+            box-shadow: 0 0 15px rgba(255, 0, 102, 0.6);
+        }
+
+.ascii-output {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #0a0a0a; /* deep black */
+    border: 1px solid #9d00ff; /* electric purple */
+    box-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
+    overflow-x: auto;
+}
+
+    .ascii-output pre {
+        margin: 0;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.2;
+        color: #00ff00; /* acidic green - matrix vibes */
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    }
+
+

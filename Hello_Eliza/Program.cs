@@ -22,7 +22,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+	pattern: "{controller=Ascii}/{action=Input}/{id?}")
     .WithStaticAssets();
 
 

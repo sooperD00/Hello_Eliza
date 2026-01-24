@@ -1,8 +1,9 @@
-namespace Hello_Eliza.Models;
-
-public class ErrorViewModel
+namespace Hello_Eliza.Models
 {
-    public string? RequestId { get; set; }
+    public class ErrorViewModel
+    {
+        public string? RequestId { get; set; }
 
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    }
 }
