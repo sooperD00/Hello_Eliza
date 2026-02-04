@@ -1,4 +1,4 @@
-namespace Hell0_Web.Models;
+namespace Hello_Eliza.Models;
 
 public class Essay
 {

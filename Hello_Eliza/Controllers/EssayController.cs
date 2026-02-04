@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Hell0_Web.Models;
+using Hello_Eliza.Models;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using YamlDotNet.Serialization;
 
-namespace Hell0_Web.Controllers;
+namespace Hello_Eliza.Controllers;
 
 public class EssayController : Controller
 {

@@ -7,6 +7,93 @@ Nicole Rowsey 1/23/2026 - ????????
 - [ ] dotnet run
 - [ ] http://localhost:5103
 
+# Next Time You Come By 2/??/2026
+- [ ] make it so user can just start typing an dnot have to click the input
+- [ ] uh oh, there's a recognizable zork or ascii output box - I didn't want that I want a surprise
+- [ ] /essays/{slug} needs a next -> button and a -> random button
+
+
+
+# Zork and Essays 2/4/2026
+- [ ] Fix namespaces in Essay.cs and EssayController.cs (Hell0_Web → Hello_Eliza)
+- [ ] Get what you need out of ZORK_CHECKLIST.md into here and delete the file
+- [ ] Add routes in Program.cs for /essays `app.MapControllerRoute()`
+- [ ] Add to _Layout.cshtml:
+```html
+<link rel="stylesheet" href="~/css/zork.css" />
+<script src="~/js/zork.js"></script>
+```
+- [ ] Test the state machine — type three times, watch it turn
+
+## Step 5: Test (~10 min)
+
+```bash
+dotnet run
+```
+
+1. Go to homepage → type something → ASCII art
+2. Type again → ASCII art
+3. Type third time → "Do you like my art?" (serif!)
+4. Type "yes" → conversation begins
+5. Type "blog" → redirects to /essays
+6. Check /essays shows your sample essay
+7. Click essay → detail view works
+
+---
+
+## Step 6: Tune the Rules (ongoing fun)
+
+Edit `wwwroot/data/zork-rules.json` to:
+- Add more patterns
+- Adjust responses
+- Change idle timing
+- Add Crawford-specific easter eggs
+
+No recompile needed — it's just JSON.
+
+---
+
+## Step 7: Write Real Essays
+
+Delete `memes-for-moloch-1.md` and replace with your actual first essay.
+
+Frontmatter format:
+```yaml
+---
+title: "Your Title Here"
+date: 2025-01-17
+description: "Optional subtitle"
+published: true
+---
+
+Your markdown content...
+```
+
+---
+
+## Optional: CSS Variables
+
+If your `site.css` doesn't already define these, add them:
+
+```css
+:root {
+    --neon-cyan: #0ff;
+    --neon-purple: #a855f7;
+}
+```
+
+
+- [ ] Make something special for Crawford
+- [ ] commit
+
+
+## Notes
+
+- Zork state lives in sessionStorage (clears on tab close)
+- Unlocked links persist per session, appear in bottom-left
+- The rules JSON is the heart — that's where the personality lives
+- Blog essays are just .md files, no database needed
+
 
 ---
 
@@ -118,23 +205,9 @@ mv zork-rules.json Hello_Eliza/wwwroot/data/
 # ZORK_CHECKLIST.md stays at repo root (or delete if you prefer)
 # screenshot_hell0_web.png - keep or delete, your call
 ```
-- [ ] 
-- [ ] 
+- [x] commit
 
-- [ ] commit
 
-# Next Time You Come By 1/??/2026
-- [ ] Fix namespaces in Essay.cs and EssayController.cs (Hell0_Web → Hello_Eliza)
-- [ ] Get what you need out of ZORK_CHECKLIST.md into here and delete the file
-- [ ] Add routes in Program.cs for /essays
-- [ ] Add to _Layout.cshtml:
-```html
-<link rel="stylesheet" href="~/css/zork.css" />
-<script src="~/js/zork.js"></script>
-```
-- [ ] Test the state machine — type three times, watch it turn
-- [ ] Make something special for Crawford
-- [ ] commit
 
 
 - [ ] 
