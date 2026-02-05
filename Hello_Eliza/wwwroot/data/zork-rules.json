@@ -1,4 +1,11 @@
 {
+  "turn_message": "do you like my art?",
+  "idle": [
+      "still there?",
+      "asdf",
+      "zork!",
+      "hmm hmmm hmm hmm hmmmm"
+  ],
   "rules": [
     {
       "match": "^yes$|^yeah|^yep|^yup|^sure|^ok$|^okay",

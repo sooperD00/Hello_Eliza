@@ -1,111 +1,81 @@
 /**
- * ZORK - An interactive discovery experience
- * Inspired by Zork, Myst, ELIZA, and the old internet
- * 
- * State machine that transforms a simple ASCII art generator
- * into a conversation with the website itself.
+ * ZORK - A conversational discovery layer
+ * Turn 1-2: ASCII art
+ * Turn 3: "Do you like my art?"
+ * Turn 4+: Pattern match → response, else → ASCII art
  */
 
 (function() {
     'use strict';
 
-    // --- Configuration ---
     const RULES_PATH = '/data/zork-rules.json';
     
-    // --- State ---
-    let state = sessionStorage.getItem('zorkState') || 'INTRO_1';
-    let interactionCount = parseInt(sessionStorage.getItem('zorkCount') || '0', 10);
+    let turnCount = parseInt(sessionStorage.getItem('zorkTurn') || '0', 10);
     let rules = null;
-    let idleTimers = [];
     let unlocked = JSON.parse(sessionStorage.getItem('zorkUnlocked') || '[]');
+    let idleTimer = null;
 
-    // --- DOM Elements (set on init) ---
-    let form, input, output;
+    let form, input, zorkOutput;
 
-    // --- Initialize ---
     async function init() {
-        // Find existing elements from the page
         form = document.querySelector('form');
-        input = document.querySelector('input[type="text"], input[name="UserInput"]');
-        output = document.querySelector('pre, .ascii-output, #output');
+        input = document.querySelector('input[name="UserInput"]');
+        zorkOutput = document.querySelector('.zork-output');
 
-        if (!form || !input) {
-            console.warn('Zork: Required elements not found');
-            return;
+        if (!form || !input) return;
+
+        // Create zork-output if missing
+        if (!zorkOutput) {
+            zorkOutput = document.createElement('div');
+            zorkOutput.className = 'zork-output';
+            document.querySelector('.terminal').insertAdjacentElement('afterend', zorkOutput);
         }
 
-        // Create output area if needed
-        if (!output) {
-            output = document.createElement('div');
-            output.id = 'zork-output';
-            form.parentNode.insertBefore(output, form.nextSibling);
-        }
-
-        // Load rules
         try {
             const response = await fetch(RULES_PATH);
             rules = await response.json();
         } catch (e) {
             console.error('Zork: Failed to load rules', e);
-            return;
         }
 
-        // Intercept form submission
         form.addEventListener('submit', handleSubmit);
-
-        // Start idle timer
-        resetIdleTimers();
-
-        // Render unlocked links
         renderUnlocked();
-
-        console.log('Zork initialized. State:', state);
+        resetIdleTimer();
     }
 
-    // --- Form Handler ---
     async function handleSubmit(e) {
         e.preventDefault();
         
         const text = input.value.trim();
         if (!text) return;
 
-        resetIdleTimers();
-        interactionCount++;
-        sessionStorage.setItem('zorkCount', interactionCount.toString());
+        turnCount++;
+        sessionStorage.setItem('zorkTurn', turnCount.toString());
 
-        switch (state) {
-            case 'INTRO_1':
+        if (turnCount <= 2) {
+            // Turns 1-2: ASCII art
+            await doAscii(text);
+        } else if (turnCount === 3) {
+            // Turn 3: The turn
+            displayZork(rules?.turn_message || "Do you like my art?");
+        } else {
+            // Turn 4+: Try pattern match, fallback to ASCII
+            const matched = tryPatternMatch(text);
+            if (!matched) {
                 await doAscii(text);
-                state = 'INTRO_2';
-                break;
-
-            case 'INTRO_2':
-                await doAscii(text);
-                state = 'TURN';
-                break;
-
-            case 'TURN':
-                displayTurn(rules.turn_message);
-                state = 'CONVO';
-                break;
-
-            case 'CONVO':
-                handleConvo(text);
-                break;
+            }
         }
 
-        sessionStorage.setItem('zorkState', state);
         input.value = '';
         input.focus();
+        resetIdleTimer();
     }
 
-    // --- ASCII Art (calls your existing backend) ---
     async function doAscii(text) {
-        try {
-            // POST to your existing endpoint
-            const formData = new FormData();
-            formData.append('UserInput', text);
+        const formData = new FormData();
+        formData.append('UserInput', text);
 
+        try {
             const response = await fetch(form.action || '/Ascii/Input', {
                 method: 'POST',
                 body: formData
@@ -113,20 +83,20 @@
 
             if (response.ok) {
                 const html = await response.text();
-                // Extract just the ASCII output from the response
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
-                const ascii = doc.querySelector('pre, .ascii-output')?.textContent || text;
-                displayAscii(ascii);
+                const ascii = doc.querySelector('pre')?.textContent || text;
+                
+                zorkOutput.innerHTML = `<pre>${ascii}</pre>`;
             }
         } catch (e) {
             console.error('ASCII fetch failed', e);
-            displayMessage('> ' + text);
         }
     }
 
-    // --- Conversation Handler ---
-    function handleConvo(text) {
+    function tryPatternMatch(text) {
+        if (!rules?.rules) return false;
+
         const lower = text.toLowerCase();
 
         for (const rule of rules.rules) {
@@ -135,55 +105,32 @@
                 if (rule.action) {
                     unlock(rule.action);
                     goTo(rule.action);
-                    return;
+                    return true;
                 }
                 if (rule.reply) {
-                    const reply = pickRandom(rule.reply);
-                    displayMessage(reply);
-                    return;
+                    const reply = Array.isArray(rule.reply) 
+                        ? rule.reply[Math.floor(Math.random() * rule.reply.length)]
+                        : rule.reply;
+                    displayZork(reply);
+                    return true;
                 }
             }
         }
-
-        // Fallback (should be caught by .* rule)
-        displayMessage('...');
+        return false;
     }
 
-    // --- Display Functions ---
-    function displayAscii(text) {
-        output.innerHTML = '';
-        const pre = document.createElement('pre');
-        pre.className = 'ascii-art';
-        pre.textContent = text;
-        output.appendChild(pre);
-    }
-
-    function displayTurn(message) {
-        output.innerHTML = '';
-        const p = document.createElement('p');
-        p.className = 'zork-turn';
-        p.textContent = message;
-        output.appendChild(p);
-    }
-
-    function displayMessage(message) {
-        const p = document.createElement('p');
-        p.className = 'zork-message';
-        p.textContent = message;
-        output.appendChild(p);
-
-        // Keep conversation scrolled
-        output.scrollTop = output.scrollHeight;
+    function displayZork(message) {
+        zorkOutput.innerHTML = `<p>${message}</p>`;
     }
 
     function displayIdle(message) {
-        const p = document.createElement('p');
-        p.className = 'zork-idle';
-        p.textContent = message;
-        output.appendChild(p);
+        zorkOutput.innerHTML = `<p class="idle">${message}</p>`;
     }
 
-    // --- Navigation ---
+    function clearZork() {
+        zorkOutput.innerHTML = '';
+    }
+
     function goTo(url) {
         if (url.startsWith('http')) {
             window.open(url, '_blank');
@@ -192,7 +139,6 @@
         }
     }
 
-    // --- Unlocked Links ---
     function unlock(path) {
         if (!unlocked.includes(path)) {
             unlocked.push(path);
@@ -217,36 +163,29 @@
         container.style.display = 'block';
         container.innerHTML = unlocked.map(path => {
             const label = path.replace(/^\//, '').replace(/^https?:\/\/[^/]+\//, '');
-            return `<a href="${path}" class="unlocked-link">${label}</a>`;
+            return `<a href="${path}">${label}</a>`;
         }).join(' · ');
     }
 
-    // --- Idle Timers ---
-    function resetIdleTimers() {
-        idleTimers.forEach(t => clearTimeout(t));
-        idleTimers = [];
-
-        if (state !== 'CONVO' || !rules?.idle) return;
-
-        rules.idle.forEach(({ delay, message }) => {
-            const timer = setTimeout(() => {
-                displayIdle(message);
+    // intermittent reinforcement
+    function resetIdleTimer() {
+        if (idleTimer) clearTimeout(idleTimer);
+        
+        if (turnCount >= 3 && rules?.idle) {
+            const minDelay = 30000;  // 30 seconds
+            const maxDelay = 60000;  // 1 minute
+            const delay = minDelay + Math.random() * (maxDelay - minDelay);
+            
+            idleTimer = setTimeout(() => {
+                const msg = rules.idle[Math.floor(Math.random() * rules.idle.length)];
+                displayIdle(msg);
             }, delay);
-            idleTimers.push(timer);
-        });
+        }
     }
 
-    // --- Utilities ---
-    function pickRandom(arr) {
-        if (typeof arr === 'string') return arr;
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    // --- Start ---
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
         init();
     }
-
 })();

@@ -1,36 +1,58 @@
 Nicole Rowsey 1/23/2026 - ????????
 # Hello_Eliza
 
+## Notes
+- Zork state lives in sessionStorage (clears on tab close)
+- Unlocked links persist per session, appear in bottom-left
+- The rules JSON is the heart — that's where the personality lives
+- Blog essays are just .md files, no database needed
+
+# Tune the Rules (ongoing) 2/4/2026
+Edit `wwwroot/data/zork-rules.json` to:
+- Add more patterns
+- Adjust responses
+- Change idle timing
+- Add Crawford-specific easter eggs
+No recompile needed — it's just JSON.
 
 # View it, Furball
 - [ ] cd Hello_Eliza/Hello_Eliza/
 - [ ] dotnet run
 - [ ] http://localhost:5103
 
+---
+
 # Next Time You Come By 2/??/2026
-- [ ] make it so user can just start typing an dnot have to click the input
-- [ ] uh oh, there's a recognizable zork or ascii output box - I didn't want that I want a surprise
-- [ ] /essays/{slug} needs a next -> button and a -> random button
-
-
-
-# Zork and Essays 2/4/2026
-- [ ] Fix namespaces in Essay.cs and EssayController.cs (Hell0_Web → Hello_Eliza)
-- [ ] Get what you need out of ZORK_CHECKLIST.md into here and delete the file
-- [ ] Add routes in Program.cs for /essays `app.MapControllerRoute()`
-- [ ] Add to _Layout.cshtml:
-```html
-<link rel="stylesheet" href="~/css/zork.css" />
-<script src="~/js/zork.js"></script>
+- [ ] Make something special for Crawford
+- [ ] commit
+CSS Variables
+- [ ] If your `site.css` doesn't already define these, add them:
+```css
+:root {
+    --neon-cyan: #0ff;
+    --neon-purple: #a855f7;
+}
 ```
-- [ ] Test the state machine — type three times, watch it turn
+- [ ] Add js timer back in
+- [ ] Add fade-out before fade-in on output change (helps distracted users notice)
 
-## Step 5: Test (~10 min)
 
-```bash
-dotnet run
-```
 
+/* Privacy Page */
+.privacy-text {
+    color: #8888aa;
+}
+
+.privacy-footnote {
+    color: #666677;
+    font-size: 0.9em;
+    margin-top: 30px;
+}
+
+---
+
+# Test 2/4/2026
+- [x] dotnet run
 1. Go to homepage → type something → ASCII art
 2. Type again → ASCII art
 3. Type third time → "Do you like my art?" (serif!)
@@ -38,25 +60,26 @@ dotnet run
 5. Type "blog" → redirects to /essays
 6. Check /essays shows your sample essay
 7. Click essay → detail view works
+- [ ] make it so user can just start typing and not have to click the input
+- [ ] uh oh, there's a recognizable zork or ascii output box - I didn't want that I want a surprise
+- [ ] /essays/{slug} needs a next -> button and a -> random button
+- [ ] tune the rules
 
----
 
-## Step 6: Tune the Rules (ongoing fun)
 
-Edit `wwwroot/data/zork-rules.json` to:
-- Add more patterns
-- Adjust responses
-- Change idle timing
-- Add Crawford-specific easter eggs
 
-No recompile needed — it's just JSON.
 
----
+# CSS 2/4/2026
+- [x] new :root{} with zork box / 70's paperback / literary palatte
+	- [x] nuke boilerplate _Layout.cshtml.css
+	- [x] nuke zork.css
 
-## Step 7: Write Real Essays
 
-Delete `memes-for-moloch-1.md` and replace with your actual first essay.
 
+
+# Write Real Essays 2/4/2026
+- [x] Delete `memes-for-moloch-1.md` and replace with your actual first essay
+- [x] No separate YAML file, it's front-loaded on the <essay>.md
 Frontmatter format:
 ```yaml
 ---
@@ -69,31 +92,16 @@ published: true
 Your markdown content...
 ```
 
----
-
-## Optional: CSS Variables
-
-If your `site.css` doesn't already define these, add them:
-
-```css
-:root {
-    --neon-cyan: #0ff;
-    --neon-purple: #a855f7;
-}
+# Wire up Zork and Essays 2/4/2026
+- [x] Fix namespaces in Essay.cs and EssayController.cs (Hell0_Web → Hello_Eliza)
+- [x] Get what you need out of ZORK_CHECKLIST.md into here and delete the file
+- [x] Add routes in Program.cs for /essays `app.MapControllerRoute()`
+- [x] Add to _Layout.cshtml:
+```html
+<link rel="stylesheet" href="~/css/zork.css" />
+<script src="~/js/zork.js"></script>
 ```
-
-
-- [ ] Make something special for Crawford
-- [ ] commit
-
-
-## Notes
-
-- Zork state lives in sessionStorage (clears on tab close)
-- Unlocked links persist per session, appear in bottom-left
-- The rules JSON is the heart — that's where the personality lives
-- Blog essays are just .md files, no database needed
-
+- [x] Test the state machine — type three times, watch it turn
 
 ---
 

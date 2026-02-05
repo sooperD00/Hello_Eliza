@@ -1,0 +1,36 @@
+AI Overview
+ELIZA, developed by Joseph Weizenbaum at MIT between 1964 and 1966, is a pioneering natural language processing program designed to simulate conversation, famously emulating a Rogerian psychotherapist. Its "state machine" approach is not a formal, complex, multi-state diagram, but rather a functional, rule-based text transformation system driven by keyword detection. 
+Tcl Developer Site
+https://wiki.tcl-lang.org/page/A+simple+version+of+Eliza#:~:text=Arjen%20Markus%20The%20program%20%22Eliza,from%20the%20user%20via%20%5Bregsub%5D
+Tcl Developer Site
+ +3
+Core Mechanisms of ELIZA
+ELIZA operates by parsing user input, identifying keywords, and transforming those inputs into responses using a "script". 
+Purdue University
+chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://engineering.purdue.edu/~ece495nl/protected/weizenbaum1966.pdf
+Purdue University
+Keyword Identification (The Trigger): The program scans user input for predefined keywords, which are ranked by importance.
+Decomposition Rules (The Input Matcher): Once a keyword is found, ELIZA uses "decomposition rules" (or templates) to break down the sentence into parts. The symbol 0 is used to represent an indefinite number of words, allowing for flexible matching.
+Reassembly Rules (The Output Generator): These rules are associated with specific decomposition rules to generate a response, often by rearranging the input and replacing keywords (e.g., transforming "you" to "I").
+"Script" as Data: ELIZA's conversational ability is contained in a "script" (like "DOCTOR"), which is treated as data, not part of the program's core logic. This allowed ELIZA to operate in different languages (German, Welsh).
+Contextual Memory: While simple, ELIZA could maintain a form of memory by storing previously used transformation rules to avoid repeating the same responses.
+Handling No Keywords: If no keywords are found, ELIZA defaults to a content-free remark (e.g., "Please continue"). 
+Purdue University
+Purdue University
+ +4
+Example of the Process
+User Input: "It seems that you hate me".
+Keyword: "you" or "me".
+Decomposition: (0 YOU 0 ME).
+Reassembly: (WHAT MAKES YOU THINK I 3 YOU) (where '3' represents the 3rd part of the input, e.g., 'hate').
+Output: "What makes you think I hate you". 
+Purdue University
+Purdue University
+Key Takeaways
+Illusion of Understanding: ELIZA is often considered the first chatbot, but it was designed to show that natural language conversation was possible without real understanding, just pattern matching.
+The "ELIZA Effect": The program is famously known for creating an "illusion of understanding," where users would project human-like empathy onto a simple script.
+Implementation: Originally written in MAD-SLIP for the IBM 7094. 
+NYU
+NYU
+ +4
+https://www.masswerk.at/eliza/#:~:text=Word%20for%20Word,a%20rather%20simple%20rule%2Dset.&text=%C2%ABELIZA%C2%BB%20was%20originally%20implemented%20by,being%20only%20one%20of%20them.

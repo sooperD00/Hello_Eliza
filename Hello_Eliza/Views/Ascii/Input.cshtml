@@ -1,7 +1,8 @@
 @model Hello_Eliza.Models.AsciiInputModel
 
-<div class="ascii-container">
-    <!-- Title -->
+
+<!-- Terminal -->
+<div class="terminal">
     <h2>Hello_Eliza</h2>
     <p class="lead text-muted zork-intro">
         <!-- prompt -->
@@ -17,16 +18,17 @@
 
     <!-- User Input -->
     <form asp-action="Input" method="post">
-        <input asp-for="UserInput" class="form-control" placeholder="Enter text here..." />
+        <input asp-for="UserInput" placeholder="Enter text here..." />
         <span asp-validation-for="UserInput" class="text-danger"></span>
         <button type="submit" class="btn btn-primary mt-2">Go</button>
     </form>
+</div>
 
-    <!-- ASCII Output -->
+
+<!-- Zork Output -->
+<div class="zork-output" id="zork-output">
     @if (ViewData["AsciiOutput"] != null)
     {
-        <div class="ascii-output">
-            <pre>@ViewData["AsciiOutput"]</pre>
-        </div>
+        <pre>@ViewData["AsciiOutput"]</pre>
     }
 </div>

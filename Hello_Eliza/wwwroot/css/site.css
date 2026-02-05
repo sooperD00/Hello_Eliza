@@ -1,110 +1,232 @@
-/* ASCII Art Generator Styles */
+/* 
+ * Palette: Brick White
+ * Zork packaging + ballpoint pen doodles + 70s sci-fi paperback
+ * Literary, not neon. Hand-drawn, not high-production.
+ * 
+ * References: /docs/design/
+ *   zork_*.png     - Infocom packaging, white bricks, folio disk
+ *   eliza_*.png    - Weizenbaum 1966, ACM flowcharts, typewriter serif
+ * 
+ * See also: masswerk.at/eliza, Weizenbaum "ELIZA" CACM Vol.9 No.1
+ */
+:root {
+    /* === WHITES === */
+    --white-brick: #f4f1eb;        /* Zork packaging, warm cream */
+    --white-bond: #fffef9;         /* typewriter paper, bright clean */
+    --white-newsprint: #e8e4dc;    /* aged journal, gray-yellow */
+    --white-terminal: #f0f0e8;     /* continuous-feed printout */
+    --white-pure: #ffffff;         /* escape hatch */
+    
+    /* === BEIGES (computer plastic, 70s-80s) === */
+    --beige-vt100: #d4c8a8;        /* DEC terminal casing */
+    --beige-ibm: #c9bea0;          /* IBM PC plastic */
+    --beige-apple: #e0d8c0;        /* Apple II case */
+    
+    /* === BLACKS === */
+    --black-terminal: #0a0a0a;     /* CRT deep black */
+    --black-ink: #2a2a2a;          /* pen on paper */
+    --black-soft: #1a1a1a;         /* rain-slick, less harsh */
+    
+    /* === GRAYS (ink weights) === */
+    --gray-ink: #2a2a2a;           /* full pen stroke */
+    --gray-text: #444444;          /* body copy */
+    --gray-muted: #666666;         /* faded, secondary */
+    --gray-hint: #999999;          /* placeholder, disabled */
+    --gray-rule: #cccccc;          /* horizontal rules, borders */
+    
+    /* === PHOSPHORS (terminal text) === */
+    --green-phosphor: #33ff33;     /* P1 phosphor, classic */
+    --green-amber: #ffb000;        /* P3 amber terminal */
+    --green-cool: #00ff66;         /* later green, bluer */
+    --green-dim: #1a9f1a;          /* low brightness */
+    
+    /* === ACCENTS (Zork cover, 70s sci-fi) === */
+    --accent-gold: #c9a227;        /* treasure, coins */
+    --accent-rust: #8b4513;        /* mountains, saddle leather */
+    --accent-forest: #355e3b;      /* trees, hunter green */
+    --accent-blood: #8b0000;       /* dark red, not neon */
+    --accent-copper: #b87333;      /* warm metal */
+    --accent-slate: #4a5568;       /* cool neutral */
+    
+    /* === THE TURN (serif moment, newspaper) === */
+    --serif-warm: #5c5347;         /* sepia ink */
+    --serif-cool: #4a4a4a;         /* newsprint black */
+    --serif-faded: #7a7062;        /* aged paper */
+    
+    /* === SEMANTIC (use these in components) === */
+    --bg-page: var(--white-brick);
+    --bg-terminal: var(--black-terminal);
+    --text-primary: var(--gray-ink);
+    --text-terminal: var(--green-phosphor);
+    --border-terminal: var(--beige-vt100);
+    --text-serif: var(--serif-warm);
+    --danger: #a03030;
+    
+    /* === TYPOGRAPHY === */
+    --font-mono: 'VT323', 'Courier New', monospace;
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Georgia', 'Times New Roman', serif;  /* or system-ui for modern */
+    
+    /* Academic / typewriter alternatives (add to Google Fonts link) */
+    --font-typewriter: 'Special Elite', 'Courier New', monospace;  /* actual typewriter */
+    --font-academic: 'Libre Baskerville', 'Georgia', serif;        /* 60s journal feel */
+    --font-thesis: 'EB Garamond', 'Garamond', serif;               /* dissertation */
+    --font-ibm: 'IBM Plex Mono', 'Courier New', monospace;         /* period-correct tech */
+
+    --line-height: 1.5;
+    --line-height-tight: 1.2;      /* ASCII art, code */
+    --line-height-loose: 1.8;      /* essay prose */
+}
+
+
+/* General */
 body {
-    background-color: #0a0a0a; /* deep black */
-    color: #c0c0c0; /* dead channel gray */
+    background-color: var(--bg-page);
+    color: var(--text-primary);
 }
 
 /* Errors */
 .text-danger {
-    color: #ff0066 !important; /* blood red for errors */
+    color: var(--danger) !important;
 }
 
-/* Privacy Page */
-.privacy-text {
-    color: #8888aa;
-}
-
-.privacy-footnote {
-    color: #666677;
-    font-size: 0.9em;
-    margin-top: 30px;
-}
-
-/* ASCII Page */
-.ascii-container {
+/* --------------------------
+ * Terminal
+ * --------------------------*/
+.terminal {
     max-width: 800px;
     margin: 50px auto;
     padding: 30px;
-    background-color: #1a1a1a; /* rain-slick black */
-    border: 1px solid #00ffff; /* electric cyan */
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); /* neon glow */
+    background-color: var(--bg-terminal);
+    border-radius: 4px;
+    
+    /* Outer bezel - lightest gray */
+    border: 4px solid var(--gray-muted);
+    
+    box-shadow: 
+        /* Middle bezel layer */
+        inset 0 0 0 8px var(--gray-text),
+        /* Inner bezel layer */
+        inset 0 0 0 12px var(--black-ink),  /* darkest */
+        /* Inner bevel shading - top/left lit, bottom/right shadowed */
+        inset 4px 4px 8px rgba(0, 0, 0, 0.9),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.05),
+        /* CRT screen depth */
+        inset 0 0 40px rgba(0, 0, 0, 0.7),
+        /* Lift off page */
+        0 6px 20px rgba(0, 0, 0, 0.3);  
 }
 
-    .ascii-container h2 {
+    .terminal h2 {
         margin-bottom: 10px;
-        color: #00ffff; /* electric cyan */
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
-        font-family: 'Courier New', monospace;
+        color: var(--text-terminal);
+        font-family: var(--font-mono);
+        /* no glow - let the text be text */
     }
 
-    .ascii-container .zork-intro {
-        font-family: 'VT323', monospace; /* retro terminal vibe - heavier bitmap fonts — chunky */
-        font-size: 1.4rem; /* VT323 runs small, bump it up */
+    .terminal .zork-intro {
+        font-family: var(--font-mono);
+        font-size: 1.4rem;
+        color: var(--text-terminal);
     }
 
-        .ascii-container .zork-intro em {
-            font-size: 1.15em; /* slightly larger for emphasis - 1.1em for subtle, 1.2em for more obvious.*/
+        .terminal .zork-intro em {
+            font-size: 1.15em;
         }
 
-    .ascii-container .text-muted {
-        color: #6c757d !important; /* bootstrap's old muted gray from v5 */
+    .terminal .text-muted {
+        color: var(--gray-muted) !important;
     }
     
-    .ascii-container input[type="text"]::placeholder {
-        color: #00ff00;
+    .terminal input[type="text"]::placeholder {
+        color: var(--green-dim);
         opacity: 0.6;
     }
-    .ascii-container input[type="text"] {
+
+    .terminal input[type="text"] {
         width: 100%;
         padding: 12px;
         font-size: 16px;
         margin-bottom: 10px;
-        background-color: #0d0d0d;
-        border: 1px solid #ff00ff; /* electric purple */
-        color: #00ff00; /* acidic green */
-        font-family: 'Courier New', monospace;
+        background-color: transparent;          /* blend with terminal */
+        border: 1px solid var(--green-dim);
+        color: var(--text-terminal);
+        font-family: var(--font-mono);
     }
 
-        .ascii-container input[type="text"]:focus {
+        .terminal input[type="text"]:focus {
             outline: none;
-            border-color: #00ffff;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            border-color: var(--text-terminal);
+            box-shadow: none;                   /* no glow */
         }
 
-    .ascii-container button {
+    .terminal button {
         padding: 10px 20px;
         font-size: 16px;
-        background-color: #ff0066; /* blood red */
-        border: 1px solid #ff0066;
-        color: #ffffff;
-        font-family: 'Courier New', monospace;
+        background-color: var(--accent-forest);
+        border: 1px solid var(--accent-forest);
+        color: var(--white-bond);
+        font-family: var(--font-mono);
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: background-color 0.2s;
     }
 
-        .ascii-container button:hover {
-            background-color: #cc0052;
-            box-shadow: 0 0 15px rgba(255, 0, 102, 0.6);
+        .terminal button:hover {
+            background-color: var(--accent-rust);
+            border-color: var(--accent-rust);
         }
 
-.ascii-output {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #0a0a0a; /* deep black */
-    border: 1px solid #9d00ff; /* electric purple */
-    box-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
-    overflow-x: auto;
+/* ----------------------------------------
+ * Zork Output (outside terminal, on page)
+ * ----------------------------------------*/
+.zork-output {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 30px;
+    color: var(--text-primary);
+    line-height: var(--line-height);
+    text-align: center;
 }
 
-    .ascii-output pre {
-        margin: 0;
-        font-family: 'Courier New', monospace;
-        font-size: 12px;
-        line-height: 1.2;
-        color: #00ff00; /* acidic green - matrix vibes */
-        text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-    }
+.zork-output pre {
+    display: inline-block;          /* centers the block */
+    text-align: left;               /* but keeps ASCII aligned */
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: var(--line-height-tight);
+    color: var(--gray-ink);
+    white-space: pre;
+    margin: 0;
+}
 
+.zork-output p {
+    font-family: var(--font-academic);
+}
 
+.zork-output p.idle {
+    animation: fadeIn 1.5s ease-in;  /* Fade in effect */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Unlocked links (optional - keep if you want the discovery mechanic) */
+#zork-unlocked {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+#zork-unlocked:hover {
+    opacity: 1;
+}
+
+#zork-unlocked a {
+    color: var(--accent-rust);
+}
