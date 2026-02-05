@@ -52,6 +52,8 @@
         turnCount++;
         sessionStorage.setItem('zorkTurn', turnCount.toString());
 
+        console.log('Turn:', turnCount, 'Text:', text);
+        
         if (turnCount <= 2) {
             // Turns 1-2: ASCII art
             await doAscii(text);
@@ -98,8 +100,14 @@
         if (!rules?.rules) return false;
 
         const lower = text.toLowerCase();
+        let fallbackRule = null;
 
         for (const rule of rules.rules) {
+            if (rule.fallback) {
+                fallbackRule = rule;  // save for later
+                continue;
+            }
+            
             const regex = new RegExp(rule.match, 'i');
             if (regex.test(lower)) {
                 if (rule.action) {
@@ -116,7 +124,17 @@
                 }
             }
         }
-        return false;
+        
+        // Nothing matched — 50% chance fallback reply, 50% ASCII
+        if (fallbackRule && Math.random() < 0.5) {
+            const reply = Array.isArray(fallbackRule.reply)
+                ? fallbackRule.reply[Math.floor(Math.random() * fallbackRule.reply.length)]
+                : fallbackRule.reply;
+            displayZork(reply);
+            return true;
+        }
+        
+        return false;  // → triggers ASCII
     }
 
     function displayZork(message) {

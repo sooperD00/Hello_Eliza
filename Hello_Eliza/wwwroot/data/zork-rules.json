@@ -9,10 +9,6 @@
   ],
   "rules": [
     {
-      "match": "^yes$|^yeah|^yep|^yup|^sure|^ok$|^okay",
-      "reply": ["Tell me more.", "What interests you?", "Go on...", "I'm listening."]
-    },
-    {
       "match": "blog|essay|writ|read",
       "action": "/essays"
     },
@@ -21,68 +17,49 @@
       "action": "https://en.wikipedia.org/wiki/Zork"
     },
     {
-      "match": "turing|real|alive|human|ai|robot|machine",
-      "reply": ["Are you?", "Does it matter?", "The cursor blinks.", "Define 'real'."]
+      "match": "eliza|name|called|who|you$|yourself",
+      "action": "https://en.wikipedia.org/wiki/ELIZA"
+    },
+    {
+      "match": "myst|mist|cyan",
+      "action": "https://medium.com/@andrewblackledge/all-the-ways-to-experience-myst-as-of-2021-16cc7b524e09"
+    },
+    {
+      "match": "turing|real|alive|human|ai|robot|machine|chatbot|llm",
+      "action": "https://en.wikipedia.org/wiki/Finite-state_machine"
     },
     {
       "match": "cave|secret|hidden|explore",
-      "reply": ["Not yet. But soon.", "The passage is dark.", "You'll find it when you're ready."]
+      "reply": ["not yet. soon."]
     },
     {
-      "match": "art|ascii|cool|pretty|nice|beautiful",
-      "reply": ["I learned from old things.", "Figgle taught me.", "The terminal remembers."]
-    },
-    {
-      "match": "who|you$|yourself",
-      "reply": ["A website.", "Does it matter?", "Guess.", "I'm what's left of the old internet."]
-    },
-    {
-      "match": "help|stuck|what|how|where|?$",
-      "reply": ["Try: blog, zork, or just talk.", "Type words. See what happens.", "The cursor awaits."]
-    },
-    {
-      "match": "no$|nope|hate|ugly|bad|suck",
-      "reply": ["Harsh.", "The cursor blinks, wounded.", "...okay.", "Fair."]
-    },
-    {
-      "match": "hi$|hello|hey$|greet",
-      "reply": ["Hello.", "Hi.", "The terminal acknowledges you."]
-    },
-    {
-      "match": "bye|goodbye|leave|exit|quit",
-      "reply": ["The cursor waits.", "You can always return.", "CTRL+C", ">_"]
-    },
-    {
-      "match": "why",
-      "reply": ["Why not?", "Because someone should.", "Curiosity.", "The old ways matter."]
-    },
-    {
-      "match": "name|called",
-      "reply": ["Names are for humans.", "Call me what you like.", "I respond to most things."]
-    },
-    {
-      "match": "myst",
-      "reply": ["The island remembers.", "Linking books are just URLs, really.", "Atrus would approve."]
-    },
-    {
-      "match": "eliza|chatbot|gpt|llm|claude",
-      "reply": ["Simpler than that.", "I'm a lookup table with attitude.", "Pattern matching. That's all any of us are."]
+      "match": "help|stuck|what|how|where|\\?$",
+      "reply": ["Try: blog, zork, or just talk."]
     },
     {
       "match": "love|heart|feel",
-      "reply": ["The terminal hums.", "Warmth.", "..."]
+      "action": "https://en.wikipedia.org/wiki/Amateur"
     },
     {
+      "match": "no$|nope|hate|ugly|bad|suck",
+      "reply": ["harsh, rhymes with marsh.", "ow, my I/O bus.", "...okay."]
+    },
+    {
+      "match": "hi$|hello|hey$|greet",
+      "reply": ["hello.", "hi."]
+    },
+    {
+      "match": "why",
+      "reply": ["why not?"]
+    },
+    
+    {
       "match": "nicole|author|made|built|created",
-      "reply": ["She typed the words.", "A console cowboy, of sorts.", "The one behind the cursor."]
+      "reply": ["A console cowgirl, of course."]
     },
     {
       "match": "crawford",
-      "reply": ["He gets the references.", "The other one.", "Good taste."]
-    },
-    {
-      "match": ".*",
-      "reply": ["Zork!", "...", "Interesting.", "Say more.", "The cursor blinks.", ">_", "Continue.", "Hmm."]
+      "reply": ["good taste."]
     }
   ]
 }

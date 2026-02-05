@@ -28,13 +28,17 @@ No recompile needed — it's just JSON.
 - [ ] essay stylings
 - [ ] commit
 
-- [ ] /essays/{slug} needs a next -> button and a -> random button that's named something fun
+- [ ] /essays/{slug} needs a next -> button and a -> random button
+- [ ] the random button should be named something fun
+
 - [ ] tune the rules - they're kinda stoopid rn
+- [ ] add in those cool @zork comments so you can show parts of the text
+
 - [ ] update README.md for the new color scheme
+
 - [ ] Add fade-out before fade-in on output change (helps distracted users notice)
 - [ ] you need a better transition for turn enum #3...
 - [ ] ASCII output is a little thin/small
-- [ ] add in those cool @zork comments so you can show parts of the text
 
 - [ ] you didn't get that brick look you were going for
 - [ ] explore the accent colors and more fonts for conversation output
@@ -46,13 +50,14 @@ No recompile needed — it's just JSON.
 ---
 
 
+# Conversation Turns Business Logic Fixes 2/5/2026
+- [x] conversation turns are not working as expected - you need to escape //? in regex
 
-# Cleanup 2/5/2026
+# Terminal Design Cleanup 2/5/2026
 - [x] make it so user can just start typing and not have to click the input
 - [x] prompt, input, go all on 1 line
 - [x] disable text refill suggestions - it kills the mood
-- [ ] the footer keeps moving up and down depending on the text - keep it lower
-
+- [x] the footer keeps moving up and down depending on the text - keep it lower
 
 
 # Test 2/4/2026
