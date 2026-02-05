@@ -36,7 +36,7 @@ The conversation engine is a JSON rules file. No neural networks, no embeddings,
 
 | Layer | Technology |
 |-------|------------|
-| **Backend** | ASP.NET Core 9.0 (MVC) |
+| **Backend** | ASP.NET Core 10.0 (MVC) |
 | **Frontend** | Razor Views, vanilla JavaScript, HTML5, CSS3 |
 | **Conversation Engine** | JSON rules file, regex pattern matching, sessionStorage state |
 | **ASCII Rendering** | Custom NuGet package ([Hell0_TDD.Core](https://www.nuget.org/packages/Hell0_TDD.Core)) wrapping Figgle |

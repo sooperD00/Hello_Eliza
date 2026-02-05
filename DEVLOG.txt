@@ -24,32 +24,36 @@ No recompile needed — it's just JSON.
 
 # Next Time You Come By 2/??/2026
 - [ ] Make something special for Crawford
+- [ ] privacy stylings
+- [ ] essay stylings
 - [ ] commit
-CSS Variables
-- [ ] If your `site.css` doesn't already define these, add them:
-```css
-:root {
-    --neon-cyan: #0ff;
-    --neon-purple: #a855f7;
-}
-```
-- [ ] Add js timer back in
+
+- [ ] /essays/{slug} needs a next -> button and a -> random button that's named something fun
+- [ ] tune the rules - they're kinda stoopid rn
+- [ ] update README.md for the new color scheme
 - [ ] Add fade-out before fade-in on output change (helps distracted users notice)
+- [ ] you need a better transition for turn enum #3...
+- [ ] ASCII output is a little thin/small
+- [ ] add in those cool @zork comments so you can show parts of the text
 
+- [ ] you didn't get that brick look you were going for
+- [ ] explore the accent colors and more fonts for conversation output
+- [ ] soften the footer font color?
 
-
-/* Privacy Page */
-.privacy-text {
-    color: #8888aa;
-}
-
-.privacy-footnote {
-    color: #666677;
-    font-size: 0.9em;
-    margin-top: 30px;
-}
-
+- [ ] move bonus appearing secret links to top
+- [ ] think with claude what the top bar should say - it's a bit boilerplate, which I like for nav but... think about it, what are some options
+- [ ] wiki zork made a link but that's not what i want, I only want internal links (I think? that was kinda cute actually... could cache them somewhere else on the page... eh I don't love it bc it's not converations. it's a nav secret)
 ---
+
+
+
+# Cleanup 2/5/2026
+- [x] make it so user can just start typing and not have to click the input
+- [x] prompt, input, go all on 1 line
+- [x] disable text refill suggestions - it kills the mood
+- [ ] the footer keeps moving up and down depending on the text - keep it lower
+
+
 
 # Test 2/4/2026
 - [x] dotnet run
@@ -60,21 +64,15 @@ CSS Variables
 5. Type "blog" → redirects to /essays
 6. Check /essays shows your sample essay
 7. Click essay → detail view works
-- [ ] make it so user can just start typing and not have to click the input
-- [ ] uh oh, there's a recognizable zork or ascii output box - I didn't want that I want a surprise
-- [ ] /essays/{slug} needs a next -> button and a -> random button
-- [ ] tune the rules
-
-
-
 
 
 # CSS 2/4/2026
 - [x] new :root{} with zork box / 70's paperback / literary palatte
-	- [x] nuke boilerplate _Layout.cshtml.css
-	- [x] nuke zork.css
-
-
+- [x] nuke boilerplate _Layout.cshtml.css
+- [x] nuke zork.css
+- [x] conversation/ASCII output below the new 'terminal'
+- [x] Add js timer back in
+- [x] Add fade-out before fade-in on output change (helps distracted users notice)
 
 
 # Write Real Essays 2/4/2026
@@ -103,7 +101,6 @@ Your markdown content...
 ```
 - [x] Test the state machine — type three times, watch it turn
 
----
 
 # Init 1/23/2026
 
@@ -215,83 +212,3 @@ mv zork-rules.json Hello_Eliza/wwwroot/data/
 ```
 - [x] commit
 
-
-
-
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 

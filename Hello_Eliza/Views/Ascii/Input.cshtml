@@ -3,7 +3,7 @@
 
 <!-- Terminal -->
 <div class="terminal">
-    <h2>Hello_Eliza</h2>
+    <h2>Hello_Eliza (c) 1966, 1981, 1984, 1993, 2026</h2>
     <p class="lead text-muted zork-intro">
         <!-- prompt -->
         <em>West of Freeside</em>
@@ -13,14 +13,13 @@
         with a boarded front door. There is a small memory partition here.
         <br>
         <br>
-        >_
+        <!-- >_  -->
     </p>
 
     <!-- User Input -->
-    <form asp-action="Input" method="post">
-        <input asp-for="UserInput" placeholder="Enter text here..." />
-        <span asp-validation-for="UserInput" class="text-danger"></span>
-        <button type="submit" class="btn btn-primary mt-2">Go</button>
+    <form asp-action="Input" method="post" class="terminal-input">
+        <span class="prompt">&gt;_</span>
+        <input asp-for="UserInput" placeholder="" autofocus autocomplete="off"/>
     </form>
 </div>
 

@@ -1,5 +1,6 @@
 {
   "turn_message": "do you like my art?",
+  "turn_style": "serif",
   "idle": [
       "still there?",
       "asdf",
@@ -83,14 +84,5 @@
       "match": ".*",
       "reply": ["Zork!", "...", "Interesting.", "Say more.", "The cursor blinks.", ">_", "Continue.", "Hmm."]
     }
-  ],
-  "idle": [
-    { "delay": 5000, "message": "..." },
-    { "delay": 10000, "message": "The cursor blinks." },
-    { "delay": 20000, "message": "Still there?" },
-    { "delay": 35000, "message": "Time passes." },
-    { "delay": 60000, "message": "The terminal waits." }
-  ],
-  "turn_message": "Do you like my art?",
-  "turn_style": "serif"
+  ]
 }

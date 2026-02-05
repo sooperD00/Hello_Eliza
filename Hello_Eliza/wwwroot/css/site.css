@@ -57,7 +57,7 @@
     --bg-page: var(--white-brick);
     --bg-terminal: var(--black-terminal);
     --text-primary: var(--gray-ink);
-    --text-terminal: var(--green-phosphor);
+    --text-terminal: var(--accent-forest);
     --border-terminal: var(--beige-vt100);
     --text-serif: var(--serif-warm);
     --danger: #a03030;
@@ -138,45 +138,48 @@ body {
         color: var(--gray-muted) !important;
     }
     
-    .terminal input[type="text"]::placeholder {
-        color: var(--green-dim);
-        opacity: 0.6;
+    /* Inline input: >_ [input field] */
+    .terminal-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
     }
 
-    .terminal input[type="text"] {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        margin-bottom: 10px;
-        background-color: transparent;          /* blend with terminal */
-        border: 1px solid var(--green-dim);
+    .terminal-input .prompt {
         color: var(--text-terminal);
         font-family: var(--font-mono);
+        font-size: 1.4rem;
+        user-select: none;
     }
 
-        .terminal input[type="text"]:focus {
-            outline: none;
-            border-color: var(--text-terminal);
-            box-shadow: none;                   /* no glow */
-        }
-
-    .terminal button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: var(--accent-forest);
-        border: 1px solid var(--accent-forest);
-        color: var(--white-bond);
+    .terminal-input input {
+        flex: 1;
+        max-width: 550px;              /* underline width */
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--text-primary);  /* underline effect */
+        color: var(--text-terminal);
         font-family: var(--font-mono);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: background-color 0.2s;
+        font-size: 1.4rem;
+        padding: 0.25rem 0;
+        outline: none;
     }
 
-        .terminal button:hover {
-            background-color: var(--accent-rust);
-            border-color: var(--accent-rust);
-        }
+    .terminal-input input:focus {
+        border-bottom-color: var(--text-terminal);
+    }
+
+    .terminal-input input::placeholder {
+        color: var(--text-primary);  /* underline effect */
+        opacity: 0.5;
+    }
+
+    /* Hidden but functional */
+    .terminal-input button {
+        position: absolute;
+        left: -9999px;
+    }
 
 /* ----------------------------------------
  * Zork Output (outside terminal, on page)
@@ -188,6 +191,7 @@ body {
     color: var(--text-primary);
     line-height: var(--line-height);
     text-align: center;
+    min-height: 4rem;              /* space between conversation and footer */
 }
 
 .zork-output pre {
@@ -202,7 +206,8 @@ body {
 }
 
 .zork-output p {
-    font-family: var(--font-academic);
+    font-family: var(--font-typewriter);    /* typewriter, academic, thesis, ibm */
+    margin-top: 4rem;                       /* space to conversation text */
 }
 
 .zork-output p.idle {
