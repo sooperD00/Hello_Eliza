@@ -23,7 +23,7 @@ No recompile needed — it's just JSON.
 ---
 
 # Next Time You Come By 2/??/2026
-- [ ] Make something special for Crawford
+- [ ] Make something special for Crawford... more rules?
 - [ ] privacy stylings
 - [ ] essay stylings
 - [ ] commit
@@ -31,7 +31,6 @@ No recompile needed — it's just JSON.
 - [ ] /essays/{slug} needs a next -> button and a -> random button
 - [ ] the random button should be named something fun
 
-- [ ] tune the rules - they're kinda stoopid rn
 - [ ] add in those cool @zork comments so you can show parts of the text
 
 - [ ] update README.md for the new color scheme
@@ -50,8 +49,14 @@ No recompile needed — it's just JSON.
 ---
 
 
+# Nav Menu 2/6/2026
+- [x] discovered links section (remove zork-unlock version)
+- [x] add /cave coming soon
+
 # Conversation Turns Business Logic Fixes 2/5/2026
 - [x] conversation turns are not working as expected - you need to escape //? in regex
+- [x] tune the rules - they're kinda stoopid rn
+
 
 # Terminal Design Cleanup 2/5/2026
 - [x] make it so user can just start typing and not have to click the input

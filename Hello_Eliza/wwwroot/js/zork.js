@@ -22,6 +22,9 @@
         input = document.querySelector('input[name="UserInput"]');
         zorkOutput = document.querySelector('.zork-output');
 
+        // Always render unlocked links, even on non-terminal pages
+        renderUnlocked();
+
         if (!form || !input) return;
 
         // Create zork-output if missing
@@ -53,7 +56,7 @@
         sessionStorage.setItem('zorkTurn', turnCount.toString());
 
         console.log('Turn:', turnCount, 'Text:', text);
-        
+
         if (turnCount <= 2) {
             // Turns 1-2: ASCII art
             await doAscii(text);
@@ -158,6 +161,9 @@
     }
 
     function unlock(path) {
+        // Only track internal links
+        if (!path.startsWith('/')) return;
+
         if (!unlocked.includes(path)) {
             unlocked.push(path);
             sessionStorage.setItem('zorkUnlocked', JSON.stringify(unlocked));
@@ -166,23 +172,18 @@
     }
 
     function renderUnlocked() {
-        let container = document.getElementById('zork-unlocked');
-        if (!container) {
-            container = document.createElement('nav');
-            container.id = 'zork-unlocked';
-            document.body.appendChild(container);
-        }
-
+        const container = document.getElementById('nav-discovered');
+        if (!container) return;
+        
         if (unlocked.length === 0) {
-            container.style.display = 'none';
+            container.innerHTML = '';
             return;
         }
 
-        container.style.display = 'block';
         container.innerHTML = unlocked.map(path => {
-            const label = path.replace(/^\//, '').replace(/^https?:\/\/[^/]+\//, '');
-            return `<a href="${path}">${label}</a>`;
-        }).join(' · ');
+            const label = path.replace(/^\//, '');  // "/essays" → "essays"
+            return `<a href="${path}" class="nav-link discovered">${label}</a>`;
+        }).join('');
     }
 
     // intermittent reinforcement

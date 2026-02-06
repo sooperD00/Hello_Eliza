@@ -22,6 +22,13 @@ namespace Hello_Eliza.Controllers
             return View();
         }
 
+        // GET: /Ascii/Cave
+        [HttpGet]
+        public IActionResult Cave()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Input(AsciiInputModel model)
         {

@@ -13,6 +13,10 @@
       "action": "/essays"
     },
     {
+      "match": "cave|secret|hidden|explore",
+      "action": "/cave"
+    },
+    {
       "match": "zork",
       "action": "https://en.wikipedia.org/wiki/Zork"
     },
@@ -28,13 +32,14 @@
       "match": "turing|real|alive|human|ai|robot|machine|chatbot|llm",
       "action": "https://en.wikipedia.org/wiki/Finite-state_machine"
     },
-    {
-      "match": "cave|secret|hidden|explore",
-      "reply": ["not yet. soon."]
-    },
+
     {
       "match": "help|stuck|what|how|where|\\?$",
       "reply": ["Try: blog, zork, or just talk."]
+    },
+    {
+      "match": "make|build",
+      "action": "https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc"
     },
     {
       "match": "love|heart|feel",

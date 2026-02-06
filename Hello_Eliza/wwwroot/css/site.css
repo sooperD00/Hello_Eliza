@@ -219,19 +219,33 @@ body {
     to { opacity: 1; }
 }
 
-/* Unlocked links (optional - keep if you want the discovery mechanic) */
-#zork-unlocked {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    font-size: 0.8rem;
-    opacity: 0.6;
+/* Discovered nav links (right side) */
+#nav-discovered {
+    display: flex;
+    gap: 1rem;
+    margin-left: 1rem;
+    margin-right: auto;    /* push everything else right, keep this left */
 }
 
-#zork-unlocked:hover {
-    opacity: 1;
+#nav-discovered .discovered {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--gray-muted);
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
-#zork-unlocked a {
+#nav-discovered .discovered:hover {
     color: var(--accent-rust);
+}
+
+/* Cave */
+.cave {
+    text-align: center;
+    margin: 4rem auto;
+}
+
+.cave img {
+    max-width: 100%;
+    height: auto;
 }

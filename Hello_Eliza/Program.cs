@@ -43,4 +43,9 @@ app.MapControllerRoute(
     pattern: "blogs/{slug?}",
     defaults: new { controller = "Essay", action = "Index" });
 
+app.MapControllerRoute(
+    name: "cave",
+    pattern: "cave",
+    defaults: new { controller = "Ascii", action = "Cave" });
+
 app.Run();
