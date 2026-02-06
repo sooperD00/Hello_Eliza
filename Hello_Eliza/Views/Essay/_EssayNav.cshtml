@@ -1,0 +1,14 @@
+<nav class="essay-nav">
+    @if (ViewData["PrevSlug"] != null)
+    {
+        <a href="/essays/@ViewData["PrevSlug"]"
+           title="@ViewData["PrevTitle"]">← prev</a>
+    }
+    <a href="/essays">all essays</a>
+    <a href="/">terminal</a>
+    @if (ViewData["NextSlug"] != null)
+    {
+        <a href="/essays/@ViewData["NextSlug"]"
+           title="@ViewData["NextTitle"]">next →</a>
+    }
+</nav>

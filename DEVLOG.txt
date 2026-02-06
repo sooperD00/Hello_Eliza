@@ -28,7 +28,7 @@ No recompile needed — it's just JSON.
 - [ ] essay stylings
 - [ ] commit
 
-- [ ] /essays/{slug} needs a next -> button and a -> random button
+
 - [ ] the random button should be named something fun
 
 - [ ] add in those cool @zork comments so you can show parts of the text
@@ -39,24 +39,56 @@ No recompile needed — it's just JSON.
 - [ ] you need a better transition for turn enum #3...
 - [ ] ASCII output is a little thin/small
 
-- [ ] you didn't get that brick look you were going for
-- [ ] explore the accent colors and more fonts for conversation output
-- [ ] soften the footer font color?
+- [ ] something that runs and checks if my links still work...
 
-- [ ] move bonus appearing secret links to top
-- [ ] think with claude what the top bar should say - it's a bit boilerplate, which I like for nav but... think about it, what are some options
-- [ ] wiki zork made a link but that's not what i want, I only want internal links (I think? that was kinda cute actually... could cache them somewhere else on the page... eh I don't love it bc it's not converations. it's a nav secret)
+
+# Pages
+- [ ] FAQ page "question|frequently|why"
+
+
+# Mystery
+- [ ] make the "essays" and other link fade in
+- [ ] make them fade in - *in their spot* so it will have open spots that suggest there are more (consider making it more explicit with "snowcrash" animation/blinking in the other spots
 ---
 
+# Conversation
+- [ ] 
 
-# Nav Menu 2/6/2026
-- [x] discovered links section (remove zork-unlock version)
+
+
+# Terminal page ++
+- [ ] consider a terminal link at top (like home but terminal - that gives you a nice open spot for ppl to keep guessing and an unlikely word for it ;)
+3. Fun ideas:
+
+Make it a zork trigger: typing "source" or "github" opens the repo
+Add a subtle idle animation — the | pipes blink like a cursor every few seconds
+Randomize the middle phrase occasionally:
+
+"No user data harvested, no ICE deployed, no Turing cops called"
+"Handcrafted bytes, artisanal pixels"
+"A consensual hallucination"
+"West of Freeside"
+
+# Essays cleanup 2/6/2026
+- [x] styles
+- [x] /essays/{slug} needs a next -> button and a -> random button
+
+# Footer 2/5/2026 - you have not committed yet
+- [x] explore the accent colors and more fonts for conversation output
+- [x] soften the footer font color?
+- [x] remove neuromancer from footer - keep in privacy
+- [x] put privacy [ privacy ] simple link in footer
+
+# Nav Menu 2/5/2026
+- [x] clean up boilerplat nav bar
+- [x] fix discovered links section (remove zork-unlock version)
+- [x] move bonus appearing secret links to top
+- [x] internal links only
 - [x] add /cave coming soon
-
+	- [x] you didn't get that brick look you were going for - it's ok, put it here
 # Conversation Turns Business Logic Fixes 2/5/2026
 - [x] conversation turns are not working as expected - you need to escape //? in regex
 - [x] tune the rules - they're kinda stoopid rn
-
 
 # Terminal Design Cleanup 2/5/2026
 - [x] make it so user can just start typing and not have to click the input

@@ -66,6 +66,17 @@
     --font-mono: 'VT323', 'Courier New', monospace;
     --font-serif: 'Georgia', 'Times New Roman', serif;
     --font-body: 'Georgia', 'Times New Roman', serif;  /* or system-ui for modern */
+
+    /* === MATERIALS (writing surfaces) === */
+    --stone: #b8b0a0;             /* limestone, tablet */
+    --wax: #d4c9a8;               /* writing tablet, beeswax */
+    --papyrus: #d6c6a5;           /* reed paper, warm tan */
+    --parchment: #ddd5c0;         /* animal skin, vellum */
+    --folio: #c9bfa6;             /* bound book edge, deckle */
+    --lead-type: #6b6b6b;         /* cast metal, composing stick */
+    --lead-rule: #888888;         /* metal rule, furniture */
+
+    --line-height-dense: 1.5;     /* notebook, not internet */
     
     /* Academic / typewriter alternatives (add to Google Fonts link) */
     --font-typewriter: 'Special Elite', 'Courier New', monospace;  /* actual typewriter */
@@ -83,6 +94,7 @@
 body {
     background-color: var(--bg-page);
     color: var(--text-primary);
+    font-family: var(--font-body);
 }
 
 /* Errors */
@@ -191,7 +203,7 @@ body {
     color: var(--text-primary);
     line-height: var(--line-height);
     text-align: center;
-    min-height: 4rem;              /* space between conversation and footer */
+    min-height: 5rem;              /* footer spacing */
 }
 
 .zork-output pre {
@@ -239,7 +251,9 @@ body {
     color: var(--accent-rust);
 }
 
-/* Cave */
+/* --------------------------
+ * Cave
+ * --------------------------*/
 .cave {
     text-align: center;
     margin: 4rem auto;
@@ -249,3 +263,303 @@ body {
     max-width: 100%;
     height: auto;
 }
+
+/* --------------------------
+ * Footer
+ * --------------------------*/
+.site-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-bottom: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--gray-muted);
+}
+
+.site-footer a {
+    color: var(--accent-rust);
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* --------------------------
+/* Page Content (essays, privacy, cave, etc.) */
+/* --------------------------*/
+.page-content {
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 2rem 3rem;
+    background-color: var(--white-terminal);  /* brick, bond, newsprint, terminal, pure */
+    border: 1px solid var(--gray-rule);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    
+    font-family: var(--font-thesis);  /* mono, serif, body, typewriter, academic, thesis, ibm */
+    line-height: var(--line-height-loose);
+    color: var(--text-primary);
+}
+
+.page-content h1 {
+    /* font-family: var(--font-serif);  mono, serif, body, typewriter, academic, thesis, ibm */
+    margin-bottom: 1.5rem;
+}
+
+.page-content .lead {
+    font-size: 1.20rem;
+    color: var(--gray-text);
+}
+
+.page-content .tldr {
+    margin-top: 2rem;
+    /* color: var(--serif-warm); */
+}
+
+.page-content .page-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-rule);
+    display: flex;
+    gap: 2rem;
+}
+
+.page-content .back-link {
+    color: var(--accent-rust);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.page-content .back-link:hover {
+    text-decoration: underline;
+}
+
+/* --------------------------
+ * Essay Index (list page)
+ * Wrapper: .page-content.essay-index
+ * --------------------------*/
+.essay-index h1 {
+    font-family: var(--font-typewriter); /* mono, serif, body, typewriter, academic, thesis, ibm */
+    color: var(--text-terminal);
+    margin-bottom: 0rem;
+}
+
+.essay-list {
+    list-style: none;
+    padding: 0;
+}
+
+.essay-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-rule);
+}
+
+.essay-item:last-child {
+    border-bottom: none;
+}
+
+.essay-link {
+    display: block;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.essay-link:hover .essay-title {
+    color: var(--accent-rust);
+}
+
+.essay-date {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--gray-muted);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.essay-title {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    transition: color 0.2s;
+    font-family: var(--font-academic);  /* mono, serif, body, typewriter, academic, thesis, ibm */
+}
+
+.essay-desc {
+    font-size: 0.9rem;
+    color: var(--gray-muted);
+    margin: 0.5rem 0 0 0;
+    line-height: 1.4;
+}
+
+.no-essays {
+    color: var(--gray-muted);
+    font-style: italic;
+}
+
+/* --------------------------
+ * Essay Detail (reading view)
+ * cardless, full-bleed newsprint
+ * Wrapper: .page-content.essay-detail
+ * --------------------------*/
+.essay-page {
+    background: var(--white-newsprint);
+    /* border-top: 1px solid var(--gray-rule); */
+}
+
+.essay-container {
+    max-width: 740px;
+    margin-left: max(1.5rem, calc(50% - 420px));
+    padding: 1.25rem 3rem 2.5rem 0;
+}
+
+ .essay-header {
+    margin-bottom: 0.5rem;
+    padding-left: 0; /* date/title aligned above the text spine */
+}
+
+.essay-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.essay-header .essay-date {
+    font-size: 1rem;
+    color: var(--gray-muted);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-mono);  /* mono, serif, body, typewriter, academic, thesis, ibm */
+}
+
+.essay-header .essay-title {
+    font-size: 2rem;
+    margin: 0 0 0.1rem 0;
+    line-height: var(--line-height-tight);
+    font-family: var(--font-academic);  /* mono, serif, body, typewriter, academic, thesis, ibm */
+}
+
+.essay-subtitle {
+    color: var(--serif-faded);
+    font-size: 1.1rem;
+    margin: 0;
+    font-style: italic;
+}
+
+.essay-nav {
+    display: flex;
+    gap: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.essay-nav a {
+    color: var(--accent-rust);
+    text-decoration: none;
+}
+
+.essay-nav a:hover { text-decoration: underline; }
+
+.essay-nav--bottom {
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    margin-bottom: 0;
+    /*border-top: 1px solid var(--gray-rule);*/
+}
+
+/* Content — prose typography */
+.essay-content {
+    color: var(--gray-text);
+    font-size: 1.05rem;
+    line-height: var(--line-height-dense);
+    padding-left: 0.3rem; /* spine offset */
+    padding-right: 3.5rem; /* leave white space on right side */
+    padding-bottom: 0rem;
+    margin-left: 0.2rem;
+    border-left: 1px solid var(--gray-hint); /* ink, text, muted, hint, rule */
+}
+
+/* bottom nav */
+.essay-content ~ .essay-nav {
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 4rem;
+    /* border-top: 1px solid var(--gray-rule); */
+}
+
+/* DROP CAP */
+.essay-content > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-academic);
+    font-size: 3.6em;
+    line-height: 0.75;
+    font-weight: 700;
+    color: var(--black-ink);
+    padding-right: 0.06em;
+    margin-top: 0.06em;
+    margin-left: -0.04em;
+}
+
+.essay-content p {
+    margin: 1rem 0;
+    font-family: var(--font-academic);   /* mono, serif, body, typewriter, academic, thesis, ibm */
+    font-size: 0.75em
+}
+
+.essay-content h2 {
+    color: var(--text-primary); /* terminal, ink, soft, text, muted, hint, rule */
+    font-size: 1.4rem;
+    margin: 2rem 0 1rem 0;
+}
+
+.essay-content h3 {
+    color: var(--serif-cool);
+    font-size: 1.2rem;
+    margin: 1.5rem 0 0.75rem 0;
+}
+
+.essay-content a {
+    color: var(--accent-rust);
+    text-decoration: underline;
+}
+
+.essay-content a:hover {
+    color: var(--accent-copper);
+}
+
+.essay-content blockquote {
+    font-family: var(--font-typewriter);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0.6rem 0 0.6rem 1rem;
+    padding: 0.3rem 0 0.3rem 1rem;
+    border-left: 1px solid var(--lead-rule);
+    color: var(--serif-faded);
+}
+
+.essay-content code {
+    font-family: var(--font-ibm);
+    background: rgba(0, 0, 0, 0.035);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+    font-size: 0.82em;
+}
+
+.essay-content pre {
+    font-family: var(--font-ibm);
+    background: rgba(0, 0, 0, 0.035);
+    padding: 0.6rem 0.8rem;
+    overflow-x: auto;
+    border-radius: 2px;
+    margin: 0.6rem 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.essay-content pre code {
+    background: none;
+    padding: 0;
+}
+

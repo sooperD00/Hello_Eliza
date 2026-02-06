@@ -1,0 +1,62 @@
+Here's how to not do it 100,000 times:
+1. Design tokens first, pixels never
+Before touching any CSS, define your palette in :root. Every color decision happens ONCE. If you don't like the cream, you change one line, not forty.
+
+
+2. Work from references, not imagination
+You have good ones. Let me pull actual values from your Zork images:
+Token nameSourceHex--bg-pagebrick white#f4f1eb (warm) or #e8e8e8 (cool)--bg-terminalcould match or contrast slightly#faf9f7--inkhand-drawn lines#2a2a2a--ink-mutedfaded pen#666--accent-goldtreasure coins#c9a227--accent-rustmountain/Personal Software logo#8b4513--accent-foresttrees#355e3b
+
+3. One component, one commit
+Your order should be:
+
+:root palette (just colors, nothing else changes yet)
+Terminal box (layout + input behavior)
+Output area (fade, no accumulation)
+Everything else inherits
+
+
+4. Sketch the boxes first
+Before CSS, draw this on paper or describe it in words:
+┌─────────────────────────────────┐
+│  >_ [user types here]           │  ← terminal div, border or shadow
+└─────────────────────────────────┘
+
+    Output fades in here,          ← no border, just space
+    replaces previous,
+    literary and quiet
+5. Test with real content
+Type "hello" three times. Type "blog". Watch the serif turn. If those moments don't feel right, the palette is wrong.
+
+
+
+
+---
+first I'll actually upload those files so you can see. but also let's talk about this. This is a personal website, where the homepage is a "terminal" with a zork-inspired prompt and eliza-inspired output. I want the terminal to still be there, I think. Currently the `>_` is html text, and the input box is under that with Enter text here... prompt in a different font. But I think I'd like to make it that you actually enter the text next to the >_, and I don't want it to be too obvious that that input box is there, but I *do* want the user to be able to just start typing rather than have to click the input box first. I want the background to be "white" (zork brick white or zork brick white family at least) and I would like the ASCII art and the zork text to appear below the "terminal" div. Meaning I want a boundary around the "terminal" and I want the output to appear below that in blank space/white space. I don't want to make it like a terminal below that. I want the text to just show up in the output area, and I don't want it to accumulate. When "zork"/eliza talk, I want it to fade in, and i want to change the time wait to be longer. It also kinda stops working after the 3 prompts but we'll get to that - that's probaly more controller logic than css... I'm not sure exactly how to change up the privacy page css, but I think for now it can inherit whatever. I like the text content, we can fix that one later, and we can fix the essay one later. I want to get the terminal entry page right. This is a mashup of zork, neuromancer, eliza, and myself. I am going for a "do it yourself" vibe, but a competent one that harkens back to a time where real artists put pen or paint to page, where people physically moved paper around on printing machines, but when computers were new and exciting in a specific way, and connected to science fiction in a special way that wasn't so... high production value? more like a rocky horror type of thing. Check out this zork picture - I don't want my website to be colorful like this, I want it to be literary like you said, but this color pallate we can grab from for "accent" or highlight colors in moderation. It's giving very 70's sci fi novel cover vibe that I like. The bricks I like so much because... idk it was something we would draw ourselves in middle school or high school in a ball point pen on our notes when we were bored and wanted to feel cool. What do you think? I obviously have "opinions" as you say... but I'm not a designer or FE person. How do I go about thinking about this and making structured decisions and testing properly to actually get something nice, rather than like, tweak this css here and then rerun and then not like it and try again 100,000,000 times?
+
+Nicole is asking a really thoughtful question about design process, not just "fix my CSS." She wants to understand how to approach this systematically rather than trial-and-error. Let me think about what she's describing:
+The vision:
+
+White/cream background (Zork brick aesthetic)
+Terminal area with >_ prompt where you type inline (autofocus, subtle input)
+Output appears below terminal in white space, not accumulated, fades in
+Literary, DIY, competent, 70s sci-fi paperback + early computing + handmade feel
+Not high production value - more Rocky Horror, pen on paper
+Color palette from the colorful Zork cover for accents only
+
+Her actual question:
+How do I think about this systematically instead of tweaking CSS 100,000 times?
+This is a design process question. Let me give her a framework:
+
+Define constraints first - she's already doing this! The Zork boxes, the vibe words, the anti-goals (not colorful, not high production)
+Create a mood board / reference set - she has the Zork images, Neuromancer references. Extract actual hex values from these.
+Design tokens / variables - define the palette ONCE in :root, then everything references it
+Component-by-component - don't try to do everything at once. Terminal first. Then output. Then essays. Then privacy.
+Static mockup before code - or at least sketch the layout boxes on paper
+One thing at a time with purpose - change ONE variable, see the result, commit or revert
+
+Let me also extract colors from her Zork images:
+
+White bricks: probably #f5f5f5 to #e8e8e8 range, hand-drawn lines in #333 or so
+The colorful cover: burnt orange/rust mountains, forest greens, gold coins, purple/green goblins, sepia/brown tree, dusty sky
+The specific changes she wants (inline input, autofocus, output below without accumulation, fade-in animation, timing adjustments) are all doable, but she's right to focus on the design approach first rather than diving into controller logic. I should help her establish a solid foundation with design tokens in :root, then work through components one at a time starting with the terminal itself.

@@ -1,14 +1,13 @@
 @model List<Hello_Eliza.Models.Essay>
-@{
-    ViewData["Title"] = "Essays";
-}
+@{ ViewData["Title"] = "Essays"; }
+@{ ViewData["FooterType"] = "essay-index"; }
 
-<div class="essay-index">
-    <h1 class="glitch-text">// TRANSMISSIONS</h1>
+<div class="page-content essay-paper essay-index">
+    <h1>// TRANSMISSIONS</h1>
     
     @if (Model.Count == 0)
     {
-        <p class="no-essays">No essays found. The feed is silent.</p>
+        <p class="no-essays">No essays found.</p>
     }
     else
     {
@@ -29,83 +28,7 @@
         </ul>
     }
     
-    <div class="back-link">
-        <a href="/">← return to terminal</a>
+    <div class="page-footer">
+        <a href="/" class="back-link">← return to terminal</a>
     </div>
 </div>
-
-<style>
-    .essay-index {
-        max-width: 700px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-    
-    .essay-index h1 {
-        font-family: monospace;
-        color: var(--neon-cyan, #0ff);
-        margin-bottom: 2rem;
-    }
-    
-    .essay-list {
-        list-style: none;
-        padding: 0;
-    }
-    
-    .essay-item {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-    }
-    
-    .essay-link {
-        display: block;
-        text-decoration: none;
-        transition: all 0.2s;
-    }
-    
-    .essay-link:hover .essay-title {
-        color: var(--neon-cyan, #0ff);
-        text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-    }
-    
-    .essay-date {
-        font-family: monospace;
-        font-size: 0.85rem;
-        color: var(--neon-purple, #a855f7);
-        display: block;
-        margin-bottom: 0.25rem;
-    }
-    
-    .essay-title {
-        font-size: 1.25rem;
-        color: #eee;
-        transition: all 0.2s;
-    }
-    
-    .essay-desc {
-        font-size: 0.9rem;
-        color: #888;
-        margin: 0.5rem 0 0 0;
-        line-height: 1.4;
-    }
-    
-    .no-essays {
-        color: #666;
-        font-style: italic;
-    }
-    
-    .back-link {
-        margin-top: 3rem;
-    }
-    
-    .back-link a {
-        color: var(--neon-purple, #a855f7);
-        text-decoration: none;
-        font-family: monospace;
-    }
-    
-    .back-link a:hover {
-        text-decoration: underline;
-    }
-</style>

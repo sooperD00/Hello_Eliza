@@ -48,4 +48,9 @@ app.MapControllerRoute(
     pattern: "cave",
     defaults: new { controller = "Ascii", action = "Cave" });
 
+app.MapControllerRoute(
+    name: "privacy",
+    pattern: "privacy",
+    defaults: new { controller = "Ascii", action = "Privacy" });
+
 app.Run();

@@ -26,10 +26,8 @@
         </main>
     </div>
 
-    <footer class="text-center mt-5 pb-3" style="color: #666677; font-size: 0.9em; font-family: 'Courier New', monospace;">
-        © 2026 Hello_Eliza | No user data harvested, no ICE deployed, no Turing cops called |
-        <a href="https://github.com/sooperD00/Hello_Eliza" style="color: #00ffff; text-decoration: none;">[ View Source ]</a>
-    </footer>
+    <!-- await data for footer text -->
+    @await Component.InvokeAsync("Footer", new { page = ViewData["FooterType"]?.ToString() ?? "default" })
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -37,10 +37,21 @@ public class EssayController : Controller
     // GET: /essays/{slug}
     public IActionResult Detail(string slug)
     {
-        var essay = GetAllEssays().FirstOrDefault(e => e.Slug == slug);
+        var allEssays = GetAllEssays()
+            .Where(e => e.Published)
+            .OrderBy(e => e.Date)
+            .ToList();
         
-        if (essay == null || !essay.Published)
+        var essay = allEssays.FirstOrDefault(e => e.Slug == slug);
+        
+        if (essay == null)
             return NotFound();
+
+        var index = allEssays.IndexOf(essay);
+        ViewData["PrevSlug"] = index > 0 ? allEssays[index - 1].Slug : null;
+        ViewData["PrevTitle"] = index > 0 ? allEssays[index - 1].Title : null;
+        ViewData["NextSlug"] = index < allEssays.Count - 1 ? allEssays[index + 1].Slug : null;
+        ViewData["NextTitle"] = index < allEssays.Count - 1 ? allEssays[index + 1].Title : null;
 
         return View(essay);
     }
