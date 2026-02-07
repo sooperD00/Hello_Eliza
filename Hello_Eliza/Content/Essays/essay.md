@@ -1,5 +1,5 @@
 ---
-title: "Essay"
+title: "A Essay"
 date: 2026-01-26
 description: ""
 published: true

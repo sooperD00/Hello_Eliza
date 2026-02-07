@@ -1,6 +1,7 @@
 {
     "terminal": [
-        "No user data harvested, no ICE deployed, no Turing cops called."
+        "No user data harvested, no ICE deployed, no Turing cops called.",
+        "No user data harvested, no occult prestige, no Turing cops called"
     ],
     "essay-index": [
         "Performances, power differentials, and bored spectators. Choose wisely.",
@@ -14,11 +15,14 @@
         "Set in a dead medium. No data harvested. No ICE deployed."
     ],
     "privacy": [
+        "No data harvested. No ICE deployed. No hallucinations.",
         "No data harvested. No ICE deployed. No occult prestige."
     ],
     "cave": [
         "No algorithm. No guardrails. Every room placed by hand.",
-        "No algorithm. No guardrails. No mercy."
+        "No algorithm. No guardrails. No mercy.",
+        "A consensual hallucination West of Freeside.",
+        "Keys on the same hook every day. A cleanup() refactor."
     ],
     "default": [
         "No data harvested. No ICE deployed."

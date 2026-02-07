@@ -3,6 +3,10 @@
  * Turn 1-2: ASCII art
  * Turn 3: "Do you like my art?"
  * Turn 4+: Pattern match → response, else → ASCII art
+ * 
+ * Nav discovery: internal paths reveal as nav links with a 
+ * Snow Crash-flavored glitch animation. First match = reveal.
+ * Second match = navigate. External links still open in a new tab.
  */
 
 (function() {
@@ -22,18 +26,6 @@
         input = document.querySelector('input[name="UserInput"]');
         zorkOutput = document.querySelector('.zork-output');
 
-        // Always render unlocked links, even on non-terminal pages
-        renderUnlocked();
-
-        if (!form || !input) return;
-
-        // Create zork-output if missing
-        if (!zorkOutput) {
-            zorkOutput = document.createElement('div');
-            zorkOutput.className = 'zork-output';
-            document.querySelector('.terminal').insertAdjacentElement('afterend', zorkOutput);
-        }
-
         try {
             const response = await fetch(RULES_PATH);
             rules = await response.json();
@@ -41,8 +33,18 @@
             console.error('Zork: Failed to load rules', e);
         }
 
+        // Render nav slots (all of them — discovered ones visible, rest invisible)
+        renderNavSlots();
+
+        if (!form || !input) return;
+
+        if (!zorkOutput) {
+            zorkOutput = document.createElement('div');
+            zorkOutput.className = 'zork-output';
+            document.querySelector('.terminal').insertAdjacentElement('afterend', zorkOutput);
+        }
+
         form.addEventListener('submit', handleSubmit);
-        renderUnlocked();
         resetIdleTimer();
     }
 
@@ -57,6 +59,13 @@
 
         console.log('Turn:', turnCount, 'Text:', text);
 
+        // Experienced user? Let them skip the intro.
+        if (turnCount <= 3) {
+            const matched = tryPatternMatch(text);
+            if (matched) return cleanup();
+        }
+
+        // Normal turn-based flow
         if (turnCount <= 2) {
             // Turns 1-2: ASCII art
             await doAscii(text);
@@ -71,6 +80,10 @@
             }
         }
 
+        cleanup();
+    }
+
+    function cleanup() {
         input.value = '';
         input.focus();
         resetIdleTimer();
@@ -105,6 +118,14 @@
         const lower = text.toLowerCase();
         let fallbackRule = null;
 
+        // *poof* reset - clear session storage
+        if (/^(reset|restart|xyzzy)$/i.test(lower)) {
+            sessionStorage.removeItem('zorkTurn');
+            sessionStorage.removeItem('zorkUnlocked');
+            location.reload();
+            return true;
+        }
+
         for (const rule of rules.rules) {
             if (rule.fallback) {
                 fallbackRule = rule;  // save for later
@@ -114,8 +135,19 @@
             const regex = new RegExp(rule.match, 'i');
             if (regex.test(lower)) {
                 if (rule.action) {
-                    unlock(rule.action);
-                    goTo(rule.action);
+                    if (rule.action.startsWith('/')) {
+                        // Internal path: first match = discover, repeat = navigate
+                        if (unlocked.includes(rule.action)) {
+                            goTo(rule.action);
+                        } else {
+                            unlock(rule.action);
+                            const label = rule.action.replace(/^\//, '');
+                            displayZork(``);
+                        }
+                    } else {
+                        // External link: open immediately
+                        window.open(rule.action, '_blank');
+                    }
                     return true;
                 }
                 if (rule.reply) {
@@ -160,41 +192,44 @@
         }
     }
 
-    function unlock(path) {
-        // Only track internal links
-        if (!path.startsWith('/')) return;
+    // ── Nav slot rendering ──────────────────────────────────────
 
-        if (!unlocked.includes(path)) {
-            unlocked.push(path);
-            sessionStorage.setItem('zorkUnlocked', JSON.stringify(unlocked));
-            renderUnlocked();
-        }
-    }
-
-    function renderUnlocked() {
+    function renderNavSlots() {
         const container = document.getElementById('nav-discovered');
-        if (!container) return;
-        
-        if (unlocked.length === 0) {
-            container.innerHTML = '';
-            return;
-        }
+        if (!container || !rules?.nav_slots) return;
 
-        container.innerHTML = unlocked.map(path => {
-            const label = path.replace(/^\//, '');  // "/essays" → "essays"
-            return `<a href="${path}" class="nav-link discovered">${label}</a>`;
+        container.innerHTML = rules.nav_slots.map(slot => {
+            const isDiscovered = unlocked.includes(slot.path);
+            const cls = isDiscovered ? 'nav-slot discovered' : 'nav-slot';
+            return `<a href="${slot.path}" class="${cls}" data-path="${slot.path}">${slot.label}</a>`;
         }).join('');
     }
 
-    // intermittent reinforcement
+    function unlock(path) {
+        // Only track internal links
+        if (!path.startsWith('/')) return;
+        if (unlocked.includes(path)) return;
+
+        unlocked.push(path);
+        sessionStorage.setItem('zorkUnlocked', JSON.stringify(unlocked));
+
+        // Find the pre-rendered slot and animate it
+        const slot = document.querySelector(`.nav-slot[data-path="${path}"]`);
+        if (slot) {
+            slot.classList.add('discovered', 'discovering');
+            slot.addEventListener('animationend', () => {
+                slot.classList.remove('discovering');
+            }, { once: true });
+        }
+    }
+
+    // ── Idle timer (intermittent reinforcement) ─────────────────
+
     function resetIdleTimer() {
         if (idleTimer) clearTimeout(idleTimer);
         
         if (turnCount >= 3 && rules?.idle) {
-            const minDelay = 30000;  // 30 seconds
-            const maxDelay = 60000;  // 1 minute
-            const delay = minDelay + Math.random() * (maxDelay - minDelay);
-            
+            const delay = 30000 + Math.random() * 30000;
             idleTimer = setTimeout(() => {
                 const msg = rules.idle[Math.floor(Math.random() * rules.idle.length)];
                 displayIdle(msg);

@@ -15,8 +15,8 @@ public class FooterViewComponent : ViewComponent
     {
         var path = Path.Combine(_env.WebRootPath, "data", "footers.json");
         var json = System.IO.File.ReadAllText(path);
-        var footers = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
-
+        var footers = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json)
+            ?? throw new InvalidOperationException("Failed to deserialize footers.json");
         var pool = footers.ContainsKey(page) ? footers[page] : footers["default"];
         var quote = pool[_random.Next(pool.Count)];
 

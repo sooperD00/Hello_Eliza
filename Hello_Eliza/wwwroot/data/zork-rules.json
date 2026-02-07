@@ -7,7 +7,18 @@
       "zork!",
       "hmm hmmm hmm hmm hmmmm"
   ],
+  "nav_slots": [
+    { "path": "/terminal", "label": "terminal" },
+    { "path": "/essays", "label": "essays" },
+    { "path": "/cave", "label": "cave" },
+    { "path": "/privacy", "label": "privacy" },
+    { "path": "/faq", "label": "faq" }
+  ],
   "rules": [
+    {
+      "match": "terminal|command|cmd|CLI|shell",
+      "action": "/terminal"
+    },
     {
       "match": "blog|essay|writ|read",
       "action": "/essays"
@@ -19,6 +30,18 @@
     {
       "match": "priva|ice|cops|harvest|cookie",
       "action": "/privacy"
+    },
+    {
+      "match": "reset|restart|xyzzy",
+      "reply": ["*poof*"]
+    },
+    {
+      "match": "infrequently|unfrequently|iaq",
+      "action": "https://cs.stanford.edu/~knuth/iaq.html"
+    },
+    {
+      "match": "\\bfrequently|\\bfaq|question",
+      "action": "/faq"
     },
     {
       "match": "zork",
@@ -36,7 +59,6 @@
       "match": "turing|real|alive|human|ai|robot|machine|chatbot|llm",
       "action": "https://en.wikipedia.org/wiki/Finite-state_machine"
     },
-
     {
       "match": "help|stuck|what|how|where|\\?$",
       "reply": ["Try: blog, zork, or just talk."]
@@ -61,7 +83,6 @@
       "match": "why",
       "reply": ["why not?"]
     },
-    
     {
       "match": "nicole|author|made|built|created",
       "reply": ["A console cowgirl, of course."]

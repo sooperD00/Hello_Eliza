@@ -563,3 +563,75 @@ body {
     padding: 0;
 }
 
+/* ── Nav discovery slots ──────────────────────────────────────
+   All slots rendered on load; undiscovered = invisible but 
+   space-reserved. Discovery triggers a slow fade + glitch.
+   (Placeholder glyphs ▓░░ saved for future ambient glitch system.)
+   ──────────────────────────────────────────────────────────── */
+
+#nav-discovered {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: 1.5rem;
+    align-items: center;
+}
+
+.nav-slot {
+    opacity: 0;
+    pointer-events: none;
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: inherit;
+    text-decoration: none;
+    /* reserve the space even when invisible */
+    visibility: hidden;
+}
+
+.nav-slot.discovered {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.nav-slot.discovered:hover {
+    text-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+}
+
+/* ── Discovery animation ─────────────────────────────────────
+   Slow fade-in (~60% of duration), then two glitch bursts 
+   with horizontal jitter and cyan/magenta chromatic split.
+   ──────────────────────────────────────────────────────────── */
+
+.nav-slot.discovering {
+    animation: nav-discover 2s ease-out forwards;
+    visibility: visible;
+}
+
+@keyframes nav-discover {
+    /* slow fade in */
+    0%   { opacity: 0;   transform: translateX(0);    text-shadow: none; }
+    50%  { opacity: 0.6; transform: translateX(0);    text-shadow: none; }
+    58%  { opacity: 0.7; transform: translateX(0);    text-shadow: none; }
+
+    /* glitch 1 — medium, the announcement */
+    60%  { opacity: 0.9; transform: translateX(-3px); text-shadow: -2px 0 cyan, 2px 0 magenta; }
+    64%  { opacity: 0.3; transform: translateX(3px);  text-shadow: 2px 0 magenta, -2px 0 cyan; }
+    68%  { opacity: 0.85; transform: translateX(0);   text-shadow: none; }
+
+    /* glitch 2 — subtle echo */
+    73%  { opacity: 1;   transform: translateX(1px);  text-shadow: -1px 0 cyan, 1px 0 magenta; }
+    76%  { opacity: 0.7; transform: translateX(-1px); text-shadow: 1px 0 cyan; }
+    79%  { opacity: 1;   transform: translateX(0);    text-shadow: none; }
+
+    /* glitch 3 — the big one, unmissable */
+    84%  { opacity: 1;   transform: translateX(-6px) scale(1.15); text-shadow: -4px 0 cyan, 4px 0 magenta, 0 0 12px rgba(0,255,255,0.5); }
+    87%  { opacity: 0.2; transform: translateX(5px) scale(1.1);  text-shadow: 3px 0 magenta, -3px 0 cyan, 0 0 8px rgba(255,0,255,0.4); }
+    90%  { opacity: 1;   transform: translateX(-2px) scale(1.05); text-shadow: -2px 0 cyan, 2px 0 magenta; }
+    93%  { opacity: 1;   transform: translateX(0) scale(1);      text-shadow: none; }
+
+    /* settle */
+    100% { opacity: 1;   transform: translateX(0) scale(1);      text-shadow: none; }
+}
