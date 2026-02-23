@@ -1,5 +1,5 @@
 # For me, the Dev
-docs/*.txt
+# docs/*.txt # you have to save them somewhere. but don't worry. they won't render until you are ready
 
 
 # Standard VS gitignore from GitHub
