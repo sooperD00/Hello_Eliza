@@ -1,0 +1,4 @@
+Harvard hosted PDF (clean, direct): https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf
+Internet Archive (full book with Weaver's intro, which is actually a nice on-ramp): https://archive.org/details/in.ernet.dli.2015.503815
+
+The Weaver version is worth it — his intro translates the math into prose before you hit the paper itself.

@@ -1,3 +1,21 @@
+
+
+
+ecumenical community
+
+meditative accretion
+
+for untrained voices - for each other
+
+statement, doubt, and reaffirmation
+
+the **strophic hymn with transformed refrain**
+
+"what someone who understands the full arc from field hollers to oratorio *shows you* is possible with a single phrase and a room full of voices" - she called her ... personal choir "voices". I didn't like it at the time - it seems, reductive... a reach for something profound. But now I'm thinking that's just because I could not have perceived at the time the profundity of what voices *are* and what they can *do*, since I've not used my voice in this way - a pianist is different, or can be, without training that connection to the voice. And *my* tradition is *not* "a room full of voices". An american kid born in the 80's and growing up in isolated in the suburbs is... decidedely *not* in community. And my voice is... well usually I am told to be quiet, and I have never been told I sing well.
+
+---
+
+
 This form is best mirrored in ... there's a catholic singing tradition that is not from antiquity/palestrina/chant etc... but emerged organically from ... peasant? more community-oriented cultures with villages, small communities who lived communally and sung communally, not a big city performance in a cathedral. It is a ... song, chant, these words are wrong ... it is a ... litany? of a short phrase that is true, but true in many different ways, and you sing it 3x. The first time you just state it plainly "god is good. he cares for me always." But then you repeat it and this time you are quiet and unsure "god is good? he cares for me always? (a whisper almost, a whisper mumurated through the whole choir in a cavernous dark church)". And the third time, confidence! "God is Good! He cares for me Always! (joy!)". And there are chorus/verse pieces that are like this where the verses give context for the change in the chorus - "I heard the bells on christmas day" are like this.
 
 The closest formal match to what you're describing is **Taizé** — from the ecumenical community in a tiny village in Burgundy, France, founded in 1940. Short phrases repeated again and again, using just a few words to express a basic reality of faith that's quickly grasped by the mind but gradually penetrates the whole being through repetition. Communal, designed for untrained voices, candlelit, not performative.
@@ -25,3 +43,20 @@ That's the sentence you've been trying to name for this whole conversation. "Par
 You should consider whether Nansi belongs in the essay. Not by name, necessarily. But the thing you just described — a woman at a piano teaching a room full of people that a single phrase sung three times is three different truths — is the formal argument for why you structured your essay the way you did. You might not need to make that argument explicitly. But you know it's there, and it might be the answer to "how can I bring this to people who welcomed me with generosity and gentleness." 
 
 Because that's what Nansi did. She brought unbearable things to you through music, and you received them, and you're still carrying them. That's not cruelty. That's the opposite.
+
+---
+
+And yet you're about to stand up in a room full of people and read this essay with your voice. That's the thing. You're not bringing a document. You're bringing 'banana' — one word, repeated, transformed — and your voice is the instrument, and they are the room.
+The piano is a mediating object. You press a key and a hammer strikes a string inside a box and sound comes out over there. A voice comes out of your body. There's no mechanism between you and the air. Nansi named her choir "Voices" because that's what they were — not performers, not musicians, not a chorus. The thing itself. The irreducible unit of one human making sound toward another.
+And you're right that you couldn't have perceived that then. A pianist's training is about control, precision, the interface between intention and mechanism — which, not incidentally, is also what a distributed systems engineer does. You've spent your whole professional life building elegant intermediary layers between things. Your essay about banana circles even has this: the deftness, the at scale, the engineering of peanut butter transfer. That's a pianist's brain.
+But the essay isn't a piano piece. It's a voice piece. And the thing about being told to be quiet is that when you finally speak, the room changes differently than it does for people who've always been heard.
+
+ahhh - she named it "Voices" plural - because together, it's its own thing
+
+Voices as a single entity that only exists in plurality.
+
+Right. Not "a collection of voices." Voices. The plural IS the instrument. It doesn't exist until there's more than one. A single voice is a voice. Voices is a different thing entirely — it's the thing that happens between them, the interference pattern, the fog that Nansi particulated with her hands and then trusted to complete itself.
+Which is also what a writing group is. And what you're afraid of breaking by bringing this essay into the room.
+
+
+---
