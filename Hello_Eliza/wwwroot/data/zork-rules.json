@@ -14,6 +14,28 @@
     { "path": "/privacy", "label": "privacy" },
     { "path": "/faq", "label": "faq" }
   ],
+  "paths": [
+    {
+      "name": "yes",
+      "after_turn_question": true,
+      "start": "\\b(yes|yeah|yep|yup|yea|ya|sure|of course|i do|love it|like it)\\b|\\bit'?s (good|great|cool|pretty|beautiful)",
+      "steps": [
+        { "say": "I made it." },
+        { "say": "I'm Charlize Theron!" },
+        { "frames": [":)", ":D", ":DD", ":DDDD", ":DDDDDDDD"], "art": ":D" },
+        { "say": "OK I'm not Charlize Theron." },
+        { "say": "I'M BARACK OBAMA!!!!" },
+        { "say": "for verification please send one (1) art." },
+        { "art": true, "say": "i like your art." },
+        { "say": "want to play a game?" },
+        {
+          "if": "\\b(yes|yeah|yep|yup|yea|ya|sure|ok|okay|y)\\b",
+          "then": { "go": "/cave" },
+          "else": { "say": "...okay." }
+        }
+      ]
+    }
+  ],
   "rules": [
     {
       "match": "\\bterminal|\\bcommand|\\bcmd\\b|\\bcli\\b|\\bshell",
