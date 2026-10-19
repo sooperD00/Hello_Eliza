@@ -28,6 +28,11 @@
       "action": "/cave"
     },
     {
+      "match": "\\b(\\w+)ice",
+      "say": "$1 .. ice",
+      "action": "/privacy"
+    },
+    {
       "match": "\\bpriva|\\bice\\b|\\bcops?\\b|\\bharvest|\\bcookie",
       "action": "/privacy"
     },
@@ -98,7 +103,7 @@
     },
     {
       "fallback": true,
-      "reply": ["please go on.", "that's very interesting.", "i see."]
+      "reply": ["please go on.", "that's very interesting.", "i see.", "earlier you said $input"]
     }
   ]
 }
