@@ -7,6 +7,14 @@
  * Nav discovery: internal paths reveal as nav links with a 
  * Snow Crash-flavored glitch animation. First match = reveal.
  * Second match = navigate. External links still open in a new tab.
+ *
+ * Rule fields (zork-rules.json, first match wins):
+ *   match    regex, case-insensitive
+ *   action   "/path" (reveal, then navigate) or "https://..." (new tab)
+ *   reply    string or array (one picked at random)
+ *   say      line built from the match, $1 = first capture group; runs action after
+ *   reset    true = say the reply, forget everything, reload
+ *   fallback true = coin-flip replies when nothing matches (no match field)
  */
 
 (function() {
@@ -144,20 +152,22 @@
                     setTimeout(() => location.reload(), 900);
                     return true;
                 }
-                if (rule.action) {
-                    if (rule.action.startsWith('/')) {
-                        // Internal path: first match = discover, repeat = navigate
-                        if (unlocked.includes(rule.action)) {
-                            goTo(rule.action);
-                        } else {
-                            unlock(rule.action);
-                            const label = rule.action.replace(/^\//, '');
-                            displayZork(``);
-                        }
-                    } else {
-                        // External link: open immediately
-                        window.open(rule.action, '_blank');
+                if (rule.say) {
+                    // Say a line built from the match ($1 = first capture group),
+                    // then do the action. "nice" → "n .. ice" → privacy.
+                    const m = lower.match(regex);
+                    displayText(rule.say.replace(/\$(\d)/g, (_, i) => m?.[i] ?? ''));
+                    if (rule.action?.startsWith('/')) {
+                        // Wait a beat so the line lands before the reveal (or the yank)
+                        setTimeout(() => runAction(rule.action, true), 900);
+                    } else if (rule.action) {
+                        // External links can't wait: browsers block delayed pop-ups
+                        runAction(rule.action, true);
                     }
+                    return true;
+                }
+                if (rule.action) {
+                    runAction(rule.action, false);
                     return true;
                 }
                 if (rule.reply) {
@@ -178,8 +188,30 @@
         return false;  // → triggers ASCII
     }
 
+    function runAction(action, keepMessage) {
+        if (action.startsWith('/')) {
+            // Internal path: first match = discover, repeat = navigate
+            if (unlocked.includes(action)) {
+                goTo(action);
+            } else {
+                unlock(action);
+                if (!keepMessage) clearZork();
+            }
+        } else {
+            // External link: open immediately
+            window.open(action, '_blank');
+        }
+    }
+
     function displayZork(message) {
         zorkOutput.innerHTML = `<p>${message}</p>`;
+    }
+
+    // For lines that contain the visitor's own words: text, never markup
+    function displayText(message) {
+        const p = document.createElement('p');
+        p.textContent = message;
+        zorkOutput.replaceChildren(p);
     }
 
     function displayIdle(message) {
