@@ -6,6 +6,12 @@
     }
     <a href="/essays">all essays</a>
     <a href="/">terminal</a>
+    @if (ViewData["RandomSlug"] != null)
+    {
+        @* label is a random pick from wwwroot/data/random-words.json *@
+        <a href="/essays/@ViewData["RandomSlug"]" class="essay-random"
+           title="random essay" aria-label="random essay">@ViewData["RandomLabel"]</a>
+    }
     @if (ViewData["NextSlug"] != null)
     {
         <a href="/essays/@ViewData["NextSlug"]"
