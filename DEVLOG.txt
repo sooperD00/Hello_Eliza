@@ -47,7 +47,56 @@ On Windows (nlr)
 
 On the Mini
 - [ ] cd ~/repos/Hello_Eliza/Hello_Eliza && dotnet run  # ssh mini
+	- >> Claude ran it first: every page 200. stopped it after, so 5103 is yours
 - [ ] open http://localhost:5103  # Windows browser
+
+Claude, on the Mini
+- [x] dotnet build  # repo root, finds Hello_Eliza.slnx
+	- >> 0 warnings, 0 errors
+- [x] dotnet test
+	- >> 1/1 passed. it's the template UnitTest1, so the runner works; the site itself isn't tested
+- [x] dotnet run, curl every page, stop it
+	- >> / /essays /essays/tempest /privacy /cave: 200. /terminal: 404 (PR #1 adds it)
+	- >> warnings, both harmless: no https port (http on purpose), DataProtection key unencrypted (first run only, normal on a Mac)
+- [x] same for all 4 PRs: gh pr checkout N, build, test, run
+	- >> all 4: 0 warnings, 0 errors, pages 200, zork-rules.json valid, zork.js parses
+	- >> #1: /terminal and /Ascii/Error work now. #3: the random link renamed itself every reload
+	- >> the cloud Claude that wrote them had no .NET; #1 and #3 asked for exactly this check
+- [x] commit your section as-is, then mine as a 2nd commit  # git show = just what I added
+
+.NET: what's left (none of it required)
+>> skip `dotnet dev-certs https --trust`: only the https profile needs it, and your Windows browser wouldn't trust the Mini's cert anyway. http + tunnel is right
+- [ ] telemetry is on by default (my runs had it off). to opt out for good:
+	- echo 'export DOTNET_CLI_TELEMETRY_OPTOUT=1' >> ~/.zshrc
+- [ ] VS Code (Windows) → Remote-SSH: mini → install "C# Dev Kit"  # lands on the Mini side, which only has GitLens so far
+- [ ] now and then: brew upgrade --cask dotnet-sdk  # security patches, about monthly
+
+PRs: look, then merge
+>> 1 → 2 → 4 are stacked (each built on the one before). 3 stands alone
+>> heads up: gh pr checkout swaps every file to that branch, this devlog too (the PRs are older than this section). push first, read along on GitHub, tick boxes back on main
+- [ ] git push  # FIRST: main has 2 commits GitHub doesn't. if you merge PRs before pushing, `git pull` refuses later
+- [ ] cd ~/repos/Hello_Eliza/Hello_Eliza  # stay here; gh + git work from any folder in the repo
+- [ ] gh pr list
+- [ ] gh pr checkout 4  # has 1 and 2 inside, so one run shows all three
+- [ ] dotnet run → browser → Ctrl+C
+	- what to type is in each PR: gh pr view 1  (and 2, 4)
+	- e.g. type 3 things → "do you like my art?" → yes, then keep typing  # #4
+	- xyzzy resets
+- [ ] gh pr checkout 3
+- [ ] dotnet run → /essays/tempest, reload a few times → Ctrl+C
+- [ ] gh pr merge 1 --merge --delete-branch  # --merge, not squash: squash breaks the stack
+- [ ] gh pr merge 2 --merge --delete-branch
+- [ ] gh pr merge 4 --merge --delete-branch
+- [ ] gh pr merge 3 --merge --delete-branch
+- [ ] git switch main && git pull  # bring the merges down
+
+Later, after the PRs are merged  # sooner would tangle with the open PRs
+- [ ] stop tracking obj/  # committed from Windows; every build rewrites them = the `M .../obj/...` in git status. don't commit those
+	- git rm -r --cached Hello_Eliza/obj Hello_Eliza.Tests/obj && git commit -m "stop tracking obj/"
+- [ ] line endings: a few dozen files are CRLF from Windows, this devlog too. recipe in stack-notes/git.md
+	- .gitattributes: * text=auto eol=lf
+	- git add --renormalize . && git commit -m "normalize line endings"
+- [ ] README "Running Locally" says https://localhost:7102. dotnet run is http://localhost:5103 (https profile: 7079)
 
 ---
 
