@@ -29,6 +29,29 @@ No recompile needed — it's just JSON.
 
 ---
 
+# Mac Setup for C#./NET Development
+10/19/2026
+
+On the Mini
+- [x] ssh mini
+- [x] git clone https://github.com/sooperD00/Hello_Eliza.git ~/repos/Hello_Eliza
+- [x] brew install --cask dotnet-sdk
+- [x] dotnet --version
+	- expect: 10.x
+	- actual: [10.0.402]
+
+On Windows (nlr)
+- [x] add "LocalForward 5103 localhost:5103" under Host mini  # 
+	- C:\Users\Barac0da\.ssh\config
+- [ ] ssh mini  # Git Bash, fresh session so the forward opens
+
+On the Mini
+- [ ] cd ~/repos/Hello_Eliza/Hello_Eliza && dotnet run  # ssh mini
+- [ ] open http://localhost:5103  # Windows browser
+
+---
+
+
 # Next Time You Come By 2/??/2026
 - [ ] Make something special for Crawford... more rules?
 
