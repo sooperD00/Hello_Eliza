@@ -1,0 +1,17 @@
+# One line-ending convention on every machine: LF in the repo and on checkout.
+* text=auto eol=lf
+
+# Binary: never convert, never diff as text
+*.png binary
+*.PNG binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.pptx binary
+*.docx binary
+*.zip binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
