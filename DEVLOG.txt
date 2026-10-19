@@ -39,6 +39,7 @@ No recompile needed — it's just JSON.
 - [c] an item conceived here but that won't be done here, marked
 	"_c_aptured" and a short note about the place it was captured
 	in (e.g. housekeeping and the [h-<id>], a sprint number)
+- [-] already done / not needed
 
 ## "expect" tracking
 - [x] if you expect something
@@ -100,10 +101,16 @@ Claude, on the Mini
 PRs: look, then merge
 >> 1 → 2 → 4 are stacked (each built on the one before). 3 stands alone
 >> heads up: gh pr checkout swaps every file to that branch, this devlog too (the PRs are older than this section). push first, read along on GitHub, tick boxes back on main
-- [ ] git push  # FIRST: main has 2 commits GitHub doesn't. if you merge PRs before pushing, `git pull` refuses later
-- [ ] cd ~/repos/Hello_Eliza/Hello_Eliza  # stay here; gh + git work from any folder in the repo
-- [ ] gh pr list
-- [ ] gh pr checkout 4  # has 1 and 2 inside, so one run shows all three
+
+Look
+- [x] gh pr list
+- [x] gh config set pager less  # set up paging in gh like git has
+- [x] gh pr diff 4 [--color always | less -R]  # all in 1 diff, no fetch needed
+
+Merge
+- [x] git push  # FIRST    !!!!!!!!
+- [-] cd ~/repos/Hello_Eliza/Hello_Eliza  # stay here
+- [ ] gh pr checkout 4  # has 1 and 2 inside
 - [ ] dotnet run → browser → Ctrl+C
 	- what to type is in each PR: gh pr view 1  (and 2, 4)
 	- e.g. type 3 things → "do you like my art?" → yes, then keep typing  # #4
