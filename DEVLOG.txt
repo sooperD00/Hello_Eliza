@@ -110,22 +110,26 @@ Look
 Merge
 - [x] git push  # FIRST    !!!!!!!!
 - [-] cd ~/repos/Hello_Eliza/Hello_Eliza  # stay here
-- [ ] gh pr checkout 4  # has 1 and 2 inside
-- [ ] dotnet run → browser → Ctrl+C
+- [x] gh pr checkout 4  # has 1 and 2 inside
+- [x] dotnet run → browser → Ctrl+C
 	- what to type is in each PR: gh pr view 1  (and 2, 4)
 	- e.g. type 3 things → "do you like my art?" → yes, then keep typing  # #4
 	- xyzzy resets
-- [ ] gh pr checkout 3
-- [ ] dotnet run → /essays/tempest, reload a few times → Ctrl+C
-- [ ] gh pr merge 1 --merge --delete-branch  # --merge, not squash: squash breaks the stack
-- [ ] gh pr merge 2 --merge --delete-branch
-- [ ] gh pr merge 4 --merge --delete-branch
-- [ ] gh pr merge 3 --merge --delete-branch
-- [ ] git switch main && git pull  # bring the merges down
+- [x] gh pr checkout 3
+- [x] dotnet run → /essays/tempest, reload a few times → Ctrl+C
+- [x] gh pr merge 1 --merge --delete-branch  # --merge, not squash: squash breaks the stack
+- [x] gh pr merge 2 --merge --delete-branch
+- [x] gh pr merge 4 --merge --delete-branch
+- [x] gh pr merge 3 --merge --delete-branch
+	- >> 1st try: GitHub GraphQL error, nothing merged. Claude reran it from main: merged
+- [x] git switch main && git pull  # bring the merges down
+	- >> refused at first: 25eb23c had committed obj/, so main's copies ≠ the PR branch's. git restore Hello_Eliza/obj, then fine
+	- >> merged main, all 4 together (Claude): 0 warnings, 0 errors, 1/1 tests, every page 200
 
 Later, after the PRs are merged  # sooner would tangle with the open PRs
-- [ ] stop tracking obj/  # committed from Windows; every build rewrites them = the `M .../obj/...` in git status. don't commit those
+- [x] stop tracking obj/  # committed from Windows; every build rewrites them = the `M .../obj/...` in git status. don't commit those
 	- git rm -r --cached Hello_Eliza/obj Hello_Eliza.Tests/obj && git commit -m "stop tracking obj/"
+	- >> acd5b79. build + dotnet run leave git status clean now
 - [ ] line endings: a few dozen files are CRLF from Windows, this devlog too. recipe in stack-notes/git.md
 	- .gitattributes: * text=auto eol=lf
 	- git add --renormalize . && git commit -m "normalize line endings"
