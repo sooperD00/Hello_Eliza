@@ -1,36 +1,30 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Barac0da\\source\\repos\\Hello_Eliza\\Hello_Eliza.Tests\\Hello_Eliza.Tests.csproj": {}
+    "/Users/sooperd00/repos/Hello_Eliza/Hello_Eliza.Tests/Hello_Eliza.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Barac0da\\source\\repos\\Hello_Eliza\\Hello_Eliza.Tests\\Hello_Eliza.Tests.csproj": {
+    "/Users/sooperd00/repos/Hello_Eliza/Hello_Eliza.Tests/Hello_Eliza.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Barac0da\\source\\repos\\Hello_Eliza\\Hello_Eliza.Tests\\Hello_Eliza.Tests.csproj",
+        "projectUniqueName": "/Users/sooperd00/repos/Hello_Eliza/Hello_Eliza.Tests/Hello_Eliza.Tests.csproj",
         "projectName": "Hello_Eliza.Tests",
-        "projectPath": "C:\\Users\\Barac0da\\source\\repos\\Hello_Eliza\\Hello_Eliza.Tests\\Hello_Eliza.Tests.csproj",
-        "packagesPath": "C:\\Users\\Barac0da\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Barac0da\\source\\repos\\Hello_Eliza\\Hello_Eliza.Tests\\obj\\",
+        "projectPath": "/Users/sooperd00/repos/Hello_Eliza/Hello_Eliza.Tests/Hello_Eliza.Tests.csproj",
+        "packagesPath": "/Users/sooperd00/.nuget/packages/",
+        "outputPath": "/Users/sooperd00/repos/Hello_Eliza/Hello_Eliza.Tests/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Barac0da\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/sooperd00/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
+            "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {}
           }
@@ -45,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.400"
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
@@ -84,7 +79,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.402/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

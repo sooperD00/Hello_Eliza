@@ -27,6 +27,29 @@ No recompile needed — it's just JSON.
 - [ ] dotnet run
 - [ ] http://localhost:5103
 
+# Vocabulary
+- [ ] not *yet* done
+- [x] done
+- [~] not done *on purpose*; with reason
+- [!] error -- could't do this step
+	- [ ] a nested investigation and resolution goes here
+- [ ] if you expect something
+	- expect: write it like this
+	- actual [ ]
+- [c] an item conceived here but that won't be done here, marked
+	"_c_aptured" and a short note about the place it was captured
+	in (e.g. housekeeping and the [h-<id>], a sprint number)
+
+## "expect" tracking
+- [x] if you expect something
+	- expect: write it like this
+	- actual: [write it like this] # or a summary or a link
+- [!] if you expect something
+	- expect: write it like this
+	- actual: [I wrote it like this]
+- [x] if you expect something
+	- expect: write it like this
+	- actual: [I wrote it like this] but it was OK because I commented that it was
 ---
 
 # Mac Setup for C#./NET Development
@@ -43,12 +66,12 @@ On the Mini
 On Windows (nlr)
 - [x] add "LocalForward 5103 localhost:5103" under Host mini  # 
 	- C:\Users\Barac0da\.ssh\config
-- [ ] ssh mini  # Git Bash, fresh session so the forward opens
+- [x] ssh mini  # Git Bash, fresh session so the forward opens
 
 On the Mini
-- [ ] cd ~/repos/Hello_Eliza/Hello_Eliza && dotnet run  # ssh mini
+- [x] cd ~/repos/Hello_Eliza/Hello_Eliza && dotnet run  # ssh mini
 	- >> Claude ran it first: every page 200. stopped it after, so 5103 is yours
-- [ ] open http://localhost:5103  # Windows browser
+- [x] open http://localhost:5103  # Windows browser
 
 Claude, on the Mini
 - [x] dotnet build  # repo root, finds Hello_Eliza.slnx
@@ -65,11 +88,14 @@ Claude, on the Mini
 - [x] commit your section as-is, then mine as a 2nd commit  # git show = just what I added
 
 .NET: what's left (none of it required)
->> skip `dotnet dev-certs https --trust`: only the https profile needs it, and your Windows browser wouldn't trust the Mini's cert anyway. http + tunnel is right
-- [ ] telemetry is on by default (my runs had it off). to opt out for good:
+- [~] skip `dotnet dev-certs https --trust`: only the https profile needs it, and your Windows browser wouldn't trust the Mini's cert anyway. http + tunnel is right
+- [x] telemetry is on by default (my runs had it off). to opt out for good:
 	- echo 'export DOTNET_CLI_TELEMETRY_OPTOUT=1' >> ~/.zshrc
-- [ ] VS Code (Windows) → Remote-SSH: mini → install "C# Dev Kit"  # lands on the Mini side, which only has GitLens so far
-- [ ] now and then: brew upgrade --cask dotnet-sdk  # security patches, about monthly
+- [x] VS Code (Windows) → Remote-SSH: mini → install "C# Dev Kit"  # on the Mini side
+- [!] now and then: brew upgrade --cask dotnet-sdk  # security patches, about monthly
+	- [c] let's put some CI in there that does it for us [h-PLACEHOLDER]
+		- [x] mkdir -p docs/sprints && touch housekeeping.md
+		- [x] I'll use [h-PLACEHOLDER] until I get sprinter-kit in here
 
 PRs: look, then merge
 >> 1 → 2 → 4 are stacked (each built on the one before). 3 stands alone
