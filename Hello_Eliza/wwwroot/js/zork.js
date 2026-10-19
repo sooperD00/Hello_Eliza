@@ -2,7 +2,7 @@
  * ZORK - A conversational discovery layer
  * Turn 1-2: ASCII art
  * Turn 3: "Do you like my art?"
- * Turn 4+: Pattern match → response, else → ASCII art
+ * Turn 4+: Pattern match → response, else → coin flip (ELIZA remark or ASCII art)
  * 
  * Nav discovery: internal paths reveal as nav links with a 
  * Snow Crash-flavored glitch animation. First match = reveal.
@@ -60,8 +60,9 @@
         console.log('Turn:', turnCount, 'Text:', text);
 
         // Experienced user? Let them skip the intro.
+        // (No coin-flip fallback here, or it would eat the ASCII intro.)
         if (turnCount <= 3) {
-            const matched = tryPatternMatch(text);
+            const matched = tryPatternMatch(text, false);
             if (matched) return cleanup();
         }
 
@@ -74,7 +75,7 @@
             displayZork(rules?.turn_message || "Do you like my art?");
         } else {
             // Turn 4+: Try pattern match, fallback to ASCII
-            const matched = tryPatternMatch(text);
+            const matched = tryPatternMatch(text, true);
             if (!matched) {
                 await doAscii(text);
             }
@@ -104,27 +105,28 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
                 const ascii = doc.querySelector('pre')?.textContent || text;
-                
-                zorkOutput.innerHTML = `<pre>${ascii}</pre>`;
+
+                // textContent, not innerHTML: the visitor's words stay words.
+                const pre = document.createElement('pre');
+                pre.textContent = ascii;
+                zorkOutput.replaceChildren(pre);
             }
         } catch (e) {
             console.error('ASCII fetch failed', e);
         }
     }
 
-    function tryPatternMatch(text) {
+    function pick(reply) {
+        return Array.isArray(reply)
+            ? reply[Math.floor(Math.random() * reply.length)]
+            : reply;
+    }
+
+    function tryPatternMatch(text, allowFallback) {
         if (!rules?.rules) return false;
 
         const lower = text.toLowerCase();
         let fallbackRule = null;
-
-        // *poof* reset - clear session storage
-        if (/^(reset|restart|xyzzy)$/i.test(lower)) {
-            sessionStorage.removeItem('zorkTurn');
-            sessionStorage.removeItem('zorkUnlocked');
-            location.reload();
-            return true;
-        }
 
         for (const rule of rules.rules) {
             if (rule.fallback) {
@@ -134,6 +136,14 @@
             
             const regex = new RegExp(rule.match, 'i');
             if (regex.test(lower)) {
+                if (rule.reset) {
+                    // *poof* - say it, forget everything, start over
+                    displayZork(pick(rule.reply) || '*poof*');
+                    sessionStorage.removeItem('zorkTurn');
+                    sessionStorage.removeItem('zorkUnlocked');
+                    setTimeout(() => location.reload(), 900);
+                    return true;
+                }
                 if (rule.action) {
                     if (rule.action.startsWith('/')) {
                         // Internal path: first match = discover, repeat = navigate
@@ -151,21 +161,17 @@
                     return true;
                 }
                 if (rule.reply) {
-                    const reply = Array.isArray(rule.reply) 
-                        ? rule.reply[Math.floor(Math.random() * rule.reply.length)]
-                        : rule.reply;
-                    displayZork(reply);
+                    displayZork(pick(rule.reply));
                     return true;
                 }
             }
         }
-        
-        // Nothing matched — 50% chance fallback reply, 50% ASCII
-        if (fallbackRule && Math.random() < 0.5) {
-            const reply = Array.isArray(fallbackRule.reply)
-                ? fallbackRule.reply[Math.floor(Math.random() * fallbackRule.reply.length)]
-                : fallbackRule.reply;
-            displayZork(reply);
+
+        // Nothing matched — 50% chance fallback reply, 50% ASCII.
+        // The fallback replies are Weizenbaum's own "content-free remarks"
+        // from the 1966 paper (docs/weizenbaum1966.pdf).
+        if (allowFallback && fallbackRule && Math.random() < 0.5) {
+            displayZork(pick(fallbackRule.reply));
             return true;
         }
         

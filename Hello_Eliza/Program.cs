@@ -8,7 +8,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Ascii/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -42,6 +42,11 @@ app.MapControllerRoute(
     name: "blogs",  // Alias for discovery
     pattern: "blogs/{slug?}",
     defaults: new { controller = "Essay", action = "Index" });
+
+app.MapControllerRoute(
+    name: "terminal",  // Like home, but you had to find it
+    pattern: "terminal",
+    defaults: new { controller = "Ascii", action = "Input" });
 
 app.MapControllerRoute(
     name: "cave",

@@ -29,6 +29,16 @@ namespace Hello_Eliza.Controllers
             return View();
         }
 
+        // GET: /Ascii/Error (production exception handler, see Program.cs)
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
+
         [HttpPost]
         public IActionResult Input(AsciiInputModel model)
         {

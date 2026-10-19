@@ -52,8 +52,9 @@ The conversation engine is a JSON rules file. No neural networks, no embeddings,
 Hello_Eliza/
 ├── Hello_Eliza/
 │   ├── Controllers/
-│   │   ├── AsciiController.cs      # ASCII art generation
-│   │   └── EssayController.cs      # Blog/essay routing
+│   │   ├── AsciiController.cs      # ASCII art, terminal, cave, privacy
+│   │   ├── EssayController.cs      # Blog/essay routing
+│   │   └── PagesController.cs      # Markdown pages (FAQ)
 │   ├── Models/
 │   │   ├── AsciiInputModel.cs      # Input validation
 │   │   └── Essay.cs                # Essay metadata + content
@@ -63,12 +64,13 @@ Hello_Eliza/
 │   │       ├── Index.cshtml        # Essay list
 │   │       └── Detail.cshtml       # Single essay
 │   ├── Content/
-│   │   └── Essays/                 # Markdown files live here
-│   │       └── *.md
+│   │   ├── Essays/                 # Markdown files live here
+│   │   │   └── *.md
+│   │   └── Pages/
+│   │       └── faq.md
 │   └── wwwroot/
 │       ├── css/
-│       │   ├── site.css            # Base styles (cyberpunk)
-│       │   └── zork.css            # Conversation-specific styles
+│       │   └── site.css            # All styles (palette lives in :root)
 │       ├── js/
 │       │   └── zork.js             # State machine + conversation engine
 │       └── data/
@@ -77,7 +79,7 @@ Hello_Eliza/
 ├── Hello_Eliza.Tests/
 │   └── *.cs                        # Unit tests
 │
-└── Hello_Eliza.sln
+└── Hello_Eliza.slnx
 ```
 
 ---

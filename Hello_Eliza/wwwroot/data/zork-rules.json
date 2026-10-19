@@ -16,31 +16,32 @@
   ],
   "rules": [
     {
-      "match": "terminal|command|cmd|CLI|shell",
+      "match": "\\bterminal|\\bcommand|\\bcmd\\b|\\bcli\\b|\\bshell",
       "action": "/terminal"
     },
     {
-      "match": "blog|essay|writ|read",
+      "match": "\\bblog|\\bessay|\\bwrit|\\bread(?!y)",
       "action": "/essays"
     },
     {
-      "match": "cave|secret|hidden|explore",
+      "match": "\\bcave|\\bsecret|\\bhidden|\\bexplor",
       "action": "/cave"
     },
     {
-      "match": "priva|ice|cops|harvest|cookie",
+      "match": "\\bpriva|\\bice\\b|\\bcops?\\b|\\bharvest|\\bcookie",
       "action": "/privacy"
     },
     {
-      "match": "reset|restart|xyzzy",
-      "reply": ["*poof*"]
+      "match": "\\breset\\b|\\brestart\\b|xyzzy",
+      "reply": ["*poof*"],
+      "reset": true
     },
     {
-      "match": "infrequently|unfrequently|iaq",
+      "match": "infrequently|unfrequently|\\biaq\\b",
       "action": "https://cs.stanford.edu/~knuth/iaq.html"
     },
     {
-      "match": "\\bfrequently|\\bfaq|question",
+      "match": "\\bfrequently|\\bfaq|\\bquestion",
       "action": "/faq"
     },
     {
@@ -48,52 +49,56 @@
       "action": "https://en.wikipedia.org/wiki/Zork"
     },
     {
-      "match": "eliza|name|called|who|you$|yourself",
+      "match": "\\bnicole|\\bauthor|\\bmade\\b|\\bbuilt\\b|\\bcreated\\b",
+      "reply": ["A console cowgirl, of course."]
+    },
+    {
+      "match": "eliza|\\bname\\b|\\bcalled\\b|\\bwho\\b|\\byou$|\\byourself",
       "action": "https://en.wikipedia.org/wiki/ELIZA"
     },
     {
-      "match": "myst|mist|cyan",
+      "match": "\\bmyst|\\bmist\\b|\\bcyan\\b",
       "action": "https://medium.com/@andrewblackledge/all-the-ways-to-experience-myst-as-of-2021-16cc7b524e09"
     },
     {
-      "match": "turing|real|alive|human|ai|robot|machine|chatbot|llm",
+      "match": "\\bturing|\\breal\\b|\\balive\\b|\\bhuman|\\bai\\b|\\brobot|\\bmachine|\\bchatbot|\\bllm",
       "action": "https://en.wikipedia.org/wiki/Finite-state_machine"
     },
     {
-      "match": "help|stuck|what|how|where|\\?$",
+      "match": "\\bhelp|\\bstuck\\b|\\bwhat|\\bhow\\b|\\bwhere|\\?$",
       "reply": ["Try: blog, zork, or just talk."]
     },
     {
-      "match": "make|build",
+      "match": "\\bmake|\\bbuild",
       "action": "https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc"
     },
     {
-      "match": "love|heart|feel",
+      "match": "\\blove|\\bheart|\\bfeel",
       "action": "https://en.wikipedia.org/wiki/Amateur"
     },
     {
-      "match": "no$|nope|hate|ugly|bad|suck",
+      "match": "\\bno[.!]*$|\\bnope|\\bhate|\\bugly|\\bbad\\b|\\bsuck",
       "reply": ["harsh, rhymes with marsh.", "ow, my I/O bus.", "...okay."]
     },
     {
-      "match": "hi$|hello|hey$|greet",
+      "match": "\\bhi\\b|\\bhello|\\bhey\\b|\\bgreet",
       "reply": ["hello.", "hi."]
     },
     {
-      "match": "why",
+      "match": "\\bwhy\\b",
       "reply": ["why not?"]
-    },
-    {
-      "match": "nicole|author|made|built|created",
-      "reply": ["A console cowgirl, of course."]
     },
     {
       "match": "crawford",
       "reply": ["good taste."]
     },
     {
-      "match": "third|3rd",
+      "match": "\\bthird|\\b3rd\\b",
       "action": "https://www.barnesandnoble.com/w/enders-game-orson-scott-card/1100353963"
+    },
+    {
+      "fallback": true,
+      "reply": ["please go on.", "that's very interesting.", "i see."]
     }
   ]
 }
