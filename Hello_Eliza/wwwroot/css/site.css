@@ -462,6 +462,12 @@ body {
 
 .essay-nav a:hover { text-decoration: underline; }
 
+/* the random button: a different word every visit, so it reads as a different voice */
+.essay-nav a.essay-random {
+    font-family: var(--font-serif);
+    font-style: italic;
+}
+
 .essay-nav--bottom {
     margin-top: 1.5rem;
     padding-top: 0.75rem;

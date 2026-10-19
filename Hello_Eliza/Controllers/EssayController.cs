@@ -3,6 +3,7 @@ using Hello_Eliza.Models;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
+using System.Text.Json;
 using YamlDotNet.Serialization;
 
 namespace Hello_Eliza.Controllers;
@@ -10,12 +11,14 @@ namespace Hello_Eliza.Controllers;
 public class EssayController : Controller
 {
     private readonly string _essaysPath;
+    private readonly string _randomWordsPath;
     private readonly MarkdownPipeline _pipeline;
     private readonly IDeserializer _yamlDeserializer;
 
     public EssayController(IWebHostEnvironment env)
     {
         _essaysPath = Path.Combine(env.ContentRootPath, "Content", "Essays");
+        _randomWordsPath = Path.Combine(env.WebRootPath, "data", "random-words.json");
         _pipeline = new MarkdownPipelineBuilder()
             .UseYamlFrontMatter()
             .UseAdvancedExtensions()
@@ -53,7 +56,33 @@ public class EssayController : Controller
         ViewData["NextSlug"] = index < allEssays.Count - 1 ? allEssays[index + 1].Slug : null;
         ViewData["NextTitle"] = index < allEssays.Count - 1 ? allEssays[index + 1].Title : null;
 
+        // Random essay: any published essay except this one, under a random name
+        var others = allEssays.Where(e => e.Slug != slug).ToList();
+        if (others.Count > 0)
+        {
+            ViewData["RandomSlug"] = others[Random.Shared.Next(others.Count)].Slug;
+            ViewData["RandomLabel"] = PickRandomLabel();
+        }
+
         return View(essay);
+    }
+
+    // A fresh name for the random button on every page load.
+    // Edit wwwroot/data/random-words.json to add more; no recompile needed.
+    private string PickRandomLabel()
+    {
+        try
+        {
+            var json = System.IO.File.ReadAllText(_randomWordsPath);
+            var words = JsonSerializer.Deserialize<List<string>>(json);
+            if (words is { Count: > 0 })
+                return words[Random.Shared.Next(words.Count)];
+        }
+        catch (Exception)
+        {
+            // Missing or broken list: fall back to the original magic word
+        }
+        return "plugh";
     }
 
     private List<Essay> GetAllEssays()
