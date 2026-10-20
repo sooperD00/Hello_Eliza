@@ -134,10 +134,13 @@ Later, after the PRs are merged  # sooner would tangle with the open PRs
 	- git add --renormalize . && git commit -m "normalize line endings"
 	- >> f8d606c .gitattributes (binaries marked), 66eb5ee renormalize: 37 files, line endings only (diff --ignore-cr-at-eol is empty)
 	- >> copies on disk rewritten to LF too. build, tests, pages all fine after
-	- [ ] optional: make git blame skip that commit (GitHub's blame view reads the same file)
+	- [x] optional: make git blame skip that commit (GitHub's blame view reads the same file)
 		- echo 66eb5eee9d8874e1d4575aca5d146d11b637ae1b >> .git-blame-ignore-revs
 		- git config blame.ignoreRevsFile .git-blame-ignore-revs
-- [ ] README "Running Locally" says https://localhost:7102. dotnet run is http://localhost:5103 (https profile: 7079)
+		- >> every line with text goes back to its real commit; blank lines still show 66eb5ee (nothing to match on)
+		- >> the config is per clone: rerun it on a new machine
+- [x] README "Running Locally" says https://localhost:7102. dotnet run is http://localhost:5103 (https profile: 7079)
+	- >> also fixed "Run tests": it said cd Hello_Eliza.Tests from inside Hello_Eliza/Hello_Eliza. now: dotnet test from the repo root
 
 ---
 
