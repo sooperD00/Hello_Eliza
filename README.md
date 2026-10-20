@@ -128,13 +128,15 @@ git clone https://github.com/sooperD00/Hello_Eliza.git
 cd Hello_Eliza/Hello_Eliza
 dotnet restore
 dotnet run
-# Navigate to https://localhost:7102
+# Navigate to http://localhost:5103
+# (https: dotnet run --launch-profile https → https://localhost:7079, after dotnet dev-certs https --trust)
 ```
 
 ### Run tests:
 
+From the repo root:
+
 ```bash
-cd Hello_Eliza.Tests
 dotnet test
 ```
 
