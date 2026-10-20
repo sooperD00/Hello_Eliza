@@ -7,7 +7,6 @@ Nicole Rowsey 1/23/2026 - ????????
 - I build systems that make people curious
 - Nobody needs you to pick one. The people worth working for will see that the person who built intermittent reinforcement into a nav bar is the same person who kept production systems running for a decade — and that's not a contradiction, it's a superpower.
 
-
 ## Notes
 - Zork state lives in sessionStorage (clears on tab close)
 - Unlocked links persist per session, appear in bottom-left
@@ -142,57 +141,18 @@ Later, after the PRs are merged  # sooner would tangle with the open PRs
 
 ---
 
+# Deep Convo 10/18/2026
 
-# Next Time You Come By 2/??/2026
-- [ ] Make something special for Crawford... more rules?
+Do you like my art?
+- [x] PR #1, #2, #3, #4
 
-- [ ] essay stylings
-- [ ] commit
+---
 
-# Hardening
-- [ ] something that runs and checks if my links still work...
-
-# Documentation
-- [ ] update README.md for the new color scheme
-
-# Teaching
-- [ ] add in those cool @zork comments so you can show parts of the text
-
-# Conversation
-- [ ] change redirect to providing a link instead in the "conversation" area
-- [ ] Add fade-out before fade-in on output change (helps distracted users notice)
-- [ ] you need a better transition for turn enum #3...
-- [ ] ASCII output is a little thin/small
-- [ ] at least 3 "deep paths"?
-- [ ] add a lot/bunch more questions and what happens when user says "yes/no"
-- [ ] do something with $input like when you were 12
-
-# Glitching
-- [x] add a discoverable "terminal" link at the top
-- [x] like home but terminal - that gives you a nice open spot for ppl to keep guessing and an unlikely word for it ;)
-- [ ] Add a subtle idle animation — the | pipes blink like a cursor every few seconds
-- [ ] Make it a zork trigger: typing "source" or "github" opens the repo
-- [ ] make a glitch effect on pipe chars and open link spots
-- [ ] make "snowcrash" animation/blinking in the other spots
-- [ ] Randomize the footer occasionally and subtly in an animation on a timer
-
-Undiscovered slots: invisible but space-reserved 
-(▓░░ saved for future ambient glitch system)
-Discovery: slow fade-in → 2 glitches (jitter + cyan/magenta) → settle as solid link
-No navigation on first discovery — the animation IS the reward. Second time they type it → navigates.
-External links still open in new tab as-is
-
-
-# Pages
-- [x] privacy stylings
-- [x] FAQ page "question|frequently|why"
-- [ ] FAQ content .md
-
-# Mystery
+# Mystery 2/6/2026
 - [x] make the "essays" and other link fade in
 - [x] make them fade in *in their spot* so it will have open spots that suggest there are more
-- [ ] make a random button for the essays in between <- prev and next ->
-- [ ] the random button should be named something fun
+- [x] make a random button for the essays in between <- prev and next ->
+- [x] the random button should be named something fun
 
 # Essays cleanup 2/6/2026
 - [x] styles
