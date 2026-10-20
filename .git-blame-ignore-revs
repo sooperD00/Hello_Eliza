@@ -1,0 +1,5 @@
+# Commits that git blame skips (GitHub's blame view reads this file too).
+# Turn it on once per clone: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# normalize line endings to LF (2026-10-19)
+66eb5eee9d8874e1d4575aca5d146d11b637ae1b
