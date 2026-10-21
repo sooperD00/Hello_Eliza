@@ -13,7 +13,7 @@ decided yet; see the open questions at the end of design.md.
 | shape | `[x, y]`, integers |
 | scope | per world; every world has its own (0,0) |
 | directions | N is +y, E is +x |
-| a room's squares | a list: `[[0, 0]]`, or `[[2, 0], [3, 0]]` for a room that covers two |
+| a room (one squares) | `[0, 0]` |
 
 ## World file
 

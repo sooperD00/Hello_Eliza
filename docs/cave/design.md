@@ -243,26 +243,123 @@ design and probably a real app, and it's out of scope.
 
 1. **Room identity.** Is a room's `name` also its ID (used by `solved` and by groups), or does it
    get a separate `id` so it can be renamed?
+   - A: name + world is the room's ID; we'll have to make CI / tests / load room features that
+   check for duplicates. we can add an ID later if we need it, but the whole point is that
+   rooms are self-contained objects that interact only in a distributed system; argue against me
+   if you disagree.
 2. **`takes`.** Do items get used up (the latex turns into rubber), or do pockets only grow?
+   - A: it's not pockets -- not all genders have #pocketequalitynow so we need to say "inventory".
+   Also, I'm not interested in the physics of what "pockets" can hold and what "players" can cary.
+   This is an "inventory" in a game (so far) and that's it. Yes, items get used up. Items should
+   also have a max field, and when you get an item, there should be a way for the authors to say:
+   "give the player 3 'latex' items", knowing that they will need to maybe later turn them into
+   multiple other things. The items need a max as well (3 latex items is enough; 1000 is too many).
 3. **Random journal picks.** Picked once at the solve and kept (ink doesn't change), or picked
    fresh each time?
+   - A: Picked once when the room is solved and kept.
 4. **Links per entry.** Links live in the room's journal block. Should an entry be able to carry
    its own links too (the Trollope entry wants the Trollope link)?
+   - A: No, links are just a list; Player can keep clicking the journal entry and new tabs will
+   just keep opening according to the random picker. The point is the fun and loose-therefore-edgy
+   correlation between the concepts or items or technologies, so all the links should be
+   correlated to each other and to the room. If that doesn't turn out to be the case, we can
+   reconsider, but I can't think of a case now.
 5. **Ungrouped entries.** Where does an entry with no group go: its own one-slot box, or loose
    between boxes?
+   - A: loose bewteen boxes
 6. **Lists everywhere.** Can any text field (`say`, `text`) be a list with a random pick, the way
    the homepage rules work?
+   - A: Any text can be a list, picked fresh each time. Note that the editor has to have a warning
+   (e.g. small grey text) above the text edit box for this field to remind or teach the author: "Is 
+   this a clue? [And if so], rembmer: every variant has to carry the clues." In fact, we should
+   have a boolean field for `is_clue`, so that a checker script can flag issues (e.g. if we ever
+   implement semantics or LLM help, which is out of scope now), but even now can do a simple
+   modal on submit: "you made multiple options in this field and it's marked clue -- do they 
+   all give the same clue, no matter which variation the player gets?" with a yes/no for the
+   author, and final choice owned by the author (they can violate if they want, it's their room).
+   Mmm. Capture a tech debt for being able to capture feedback for the room; I don't know how (we
+   don't have a persistence layer), but even something simple like "email the room author your
+   feedback" could be done (and yes I know that's bad idea from a spam perspective, that's why
+   this is tech debt). Create a techdebt.md file in docs/scripts/ for this purpose. When I init
+   sprinter kit I'll make ids for them.
 7. **Unmet requirements.** What does the engine say when a trigger's words match but its
    requirements aren't met?
+   - A: Let's quote famous sci fi. Here's a list: ["You must know that a person’s ability to
+   discern the truth is directly proportional to his knowledge (or what's in his pockets)", "Put
+   your right hand in the box (the inventory box)", "Should philosophy guide experiments, or should
+   experiments guide philosophy?", "If only I had my sonic screwdriver on me", "If only someone
+   had already invented the flux capacitor...", "There is an art, it says, or rather, a knack to
+   flying", "Get to the choppa", "Was there anything more exciting in life than seeking answers?"]
 8. **No match.** What does the engine say when nothing matches?
+   - A: Let's quote famous sci fi. Here's a list: ["Pan Galactic Garble Blasters!", "My hands are dirty
+   too, what are you afraid of?", "You dead awhile there, mon.", "Probably got him on ice. Thaw
+   when needed.", "Better to stay alive, at least while there's a chance to get free.", "Yet in a few years an illiterate runaway named Harriet Tubman would make nineteen trips into this country and lead three hundred fugitives to freedom.", "As a kind of castaway myself, I was happy to escape into the fictional world of someone else’s trouble.", "we're going to have to play the roles you 
+   gave us.", "Let's go to Las Vegas and pretend we haven’t got any relatives.", "To get along with
+   God, consider the consequences of your behavior", "I can only dance in my chains.", "In the face 
+   of madness, rationality was powerless", "I have a bad feeling about this"]
 9. **Engine commands.** Which commands does the engine handle (go north, n, look, inventory, help)?
+   - A: yes, all those, and I'll need help. I think this is probably fairly standard. Either
+   research this and come up with a reasonable list, or guess a few and we'll expand later. I'm
+   not sure "look" can be one because that will need a non-standard response (the author will
+   have to describe the thing you look at, provide that as an option). The engine commands that
+   do the same thing regardless of room (go north, n, inventory, help) are different than "a list
+   of common verb commands" that could help bring a player from recall mode to recognition mode.
+   A helper list should be supplied to a player that spends a long time in a room, or who takes
+   too many turns (take a guess how long and how many turns and make it obvious where to update
+   the value), and in the room editor, these suggestions should be there as well for the author
+   to remember to put them in -- a shared simple.wikipedia between author and player.
+
+   update: after looking up common beginning of Zork I see some common commands: leave,
+   take, drop, go. I'm sure you can look up what the commands were. I'd like to copy them,
+   as well as their shortcuts, and if we add other shortcuts, I'd like to make sure we are
+   teaching bash / unix commands and commands for the vi editor. We need easter eggs here
+   like xyzzy, plugh, hello sailor, the name of the guy who put in the first easter egg,
+
 10. **Portals.** What does a player type to use one, and do the colors mean anything?
+   - A: this can be in the engine commands. It should be a list, here's a start: ["I use the
+   portal", "What is this blue square?", "How do I get to <world>?", "Go to <world>", "Let's
+   gooooooo!", "Allons-y!", "Second star to the right and straight on 'til morning", "To die
+   will be an awfully great adventure", "Punch it, Chewie!", "boldly go", "Let us go on and take
+   the adventures that shall fall to us", "mankind cannot stay in a cradle forever", "I'm going
+   on an adventure!] -- let's get some verb/noun and regex based on these exact-match quotes too.
 11. **Big rooms.** When a room covers several squares, which square's sides do its doors belong to?
+   - A: rooms do not cover several squares (this is a change in interface-spec.md -- no list
+   for the coordinate field in a room). An imagined space can be imaginged by the player as
+   "a big room", because that's what my physics basement and the underthing is, but each room
+   object in the game is one square, one coord, exactly the same size. You might have one square
+   with a desk and a lamp. Another might have an easy chair and a window. These might be "in the
+   same room" in the imagined world of the player and author, but the room object of the game
+   is simpler. The player knows that squares are part of "one big room" because they will see
+   the map creases drawn instead of a solid line or solid double line.
 12. **Items on screen.** Is an item in the inventory strip a word, or a small drawing?
+   - A: it's is both -- small drawing on the top, word on the bottom. We'll probably need to
+   make these more colored and 3D to distinguish from the design of the objects on the map.
+   Don't worry, I have the skills of an artist.
 13. **Reserved journal space.** Blank, or a faint hint (a year, an outline)?
+   - A: blank. it's a mystery. The box itself is the hint (one line per journal entry). I'm not
+   sure if we need a character limit on journal entries. I'm thinking yes, so that the entry
+   is only 1 line? And let the links cary the details and further learning? weigh in on this one.
+   We could add a tech debt later to expand if authors want to write more or link to an expanded
+   learning place of their own authorship.
 14. **The unlock-later hint.** If a missing side draws nothing, how does the player learn that
     something is there?
+    - A: the missing side (no crease in the map, no border, nothing) *is* the hint. We should put
+    ~black N-E-S-W markers on squares that have passageways out of them at those directions.
+    Then, when the new room is unlocked, we can replace the room with a new room that has a *red*
+    N where previously there was none -- what do you think? too hard to begin with or easy?
 15. **Line drawing.** SVG files animated with the plain CSS stroke trick (`stroke-dashoffset`), or
     a library like Vivus?
+    - A: I haven't seen Vivus, but I have seen the CSS stroke trick. Shall we start with CSS,
+    very simple, then ++ later if we want? Maybe put Vivus in techdebt? Which is easier from
+    implementation, understanding, and use perspectives?
 16. **The memory partition.** How much more obvious should the mailbox be?
+    - A: Ok finally I have looked up the actual Zork starting words. The location is not "Front
+    of Hosue", it is "**West of House.** You are standing in an open field west of a white house,
+    with a boarded front door. There is a small mailbox here." This is the actual opening text
+    that I want. But further than Zork, the mailbox has a house number on it: 2112. And it is
+    a black mailbox with a red flag, and on the mailbox is painted in white letters "memory,"
+    which calls back to Eliza's "memory partition," and is a nod to the journal and all written
+    text being cognitive offloading. The player needs to type "open mailbox" "read journal" etc,
+    just like the beginning of Zork.
 17. **The boarded front door.** How does the player get from (0,0) into the house at (0,1)?
+    - A: In Zork, the front door was "go East" or "E", so I chose (0,1) correctly.

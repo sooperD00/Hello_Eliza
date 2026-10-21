@@ -56,14 +56,15 @@ No recompile needed — it's just JSON.
 Hello_Eliza-20261020: Cave Design -- DESIGN
 
 Pull main up to date
-- [ ] git pull  # ~/repos/Hello_Eliza; brings in PR #5, leaves your edits alone
-- [ ] git add docs/devlog.md docs/learn/l-20261019.md  # same place
-- [ ] git commit -m "devlog: cave design merged, worktree learnings"  # same place
-- [ ] git push  # same place
+- [x] git pull  # ~/repos/Hello_Eliza; brings in PR #5, leaves your edits alone
+- [x] git add docs/devlog.md docs/learn/l-20261019.md  # same place
+- [x] git commit -m "devlog: cave design merged, worktree learnings"  # same place
+- [x] git push  # same place
 
 Finish Design
-- [ ] answer questions
-- [ ] PR #6
+- [x] answer questions # nlr
+- [x] git commit -m "docs(cave): answer open questions"
+- [ ] PR #6 # claude.ai
 
 
 ---
