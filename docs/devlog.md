@@ -52,6 +52,55 @@ No recompile needed — it's just JSON.
 	- actual: [I wrote it like this] but it was OK because I commented that it was
 ---
 
+# Cave Design 2 10/21/206
+Hello_Eliza-20261020: Cave Design -- DESIGN
+
+Pull main up to date
+- [ ] git pull  # ~/repos/Hello_Eliza; brings in PR #5, leaves your edits alone
+- [ ] git add docs/devlog.md docs/learn/l-20261019.md  # same place
+- [ ] git commit -m "devlog: cave design merged, worktree learnings"  # same place
+- [ ] git push  # same place
+
+Finish Design
+- [ ] answer questions
+- [ ] PR #6
+
+
+---
+
+# Cave Design 10/20/26
+Hello_Eliza-20261020: Cave Design -- DESIGN
+
+- [x] git push # FIRST!!!
+
+Worktree for the devlog
+- [x] git checkout main  # ~/repos/Hello_Eliza
+- [x] git worktree add ../Hello_Eliza-pr5 docs/cave-design  # same place
+- [x] edit the devlog in ~/repos/Hello_Eliza, as always
+
+Edit the PR in ~/repos/Hello_Eliza-pr5/docs/cave/
+- [x] cd ~/repos/Hello_Eliza-pr5 && git pull  # picks up anything I've pushed
+- [-] or open a new tmux window there
+- [x] gh pr list
+- [x] gh pr diff 5
+
+Edit, git commit, git push  # ~/repos/Hello_Eliza-pr5
+- [x] VS Code > File → Add Folder to Workspace > ~/repos/Hello_Eliza-pr5, OK
+- [x] edit under Hello_Eliza-pr5/docs/cave/ in the Explorer tree
+- [x] make sure you are in ~/repos/Hello_Eliza-pr5
+- [x] git add -A && git commit -m "docs(cave): restructure design by component"
+- [x] git push
+- [x] tell me, then hands off the cave docs until I say I've pushed
+
+Merge and Cleanup
+- [x] git pull  # ~/repos/Hello_Eliza-pr5, before you edit again
+- [x] gh pr merge 5 --merge  # either folder
+- [?] git pull  # ~/repos/Hello_Eliza
+- [x] git worktree remove ../Hello_Eliza-pr5  # same place
+
+
+---
+
 # Mac Setup for C#./NET Development
 10/19/2026
 
