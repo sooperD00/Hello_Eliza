@@ -64,7 +64,14 @@ Pull main up to date
 Finish Design
 - [x] answer questions # nlr
 - [x] git commit -m "docs(cave): answer open questions"
-- [ ] PR #6 # claude.ai
+- [x] PR #6 # claude.ai
+- [x] docs/cave/design.md#AnswersRound2
+- [x] git add docs/cave && git commit -m "docs(cave): answer open questions, round 2"
+- [x] git push
+
+MVP next
+- [ ] mock play-through
+- [ ] split docs inside them to mark what is MVP (or make a phase doc to define it)
 
 
 ---

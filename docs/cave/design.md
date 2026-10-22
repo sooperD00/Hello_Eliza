@@ -345,3 +345,91 @@ design and probably a real app, and it's out of scope.
 5. **Restart.** "restart" wipes saved progress. Ask "are you sure?" first?
 6. **Entry length.** One line per entry: how many characters? See the proposal in the spec.
 7. **Easter egg answers.** What does each magic word say back?
+
+
+# Answers Round 2
+
+1. delete the separate room `id` from techdebt and make it part of design -- the player progress issue convinced me why it's important, and it's nbd to have ids, it's a normal part of tables and that's what it's for
+2. our door opens -- maybe there is a "room" = "Front of House" so the player can open the door. Yes,
+I decide this now, because the mailbox is a place where messages from like... outside the world
+can appear on expansions (fliers, letters, things like that) in future. And "Front of House"
+is a place where the player can decide to enter the house or not, and we can use the square
+to teach more verbs than the mailbox one. (e.g. mailbox should be obvious, door should have a
+couple more things the user can do -- just easter eggy stuff, though learning about doors and
+locks is a fun thing too, but not for a 2nd square -- we'll leave that for a different door
+inside the house). So, keep the boards, but add a couple things that maybe the boards do, or
+like you touch a board and a crow flies overhead and you hear whatever. It should happen
+every time you touch a specific board to teach the user that, this is a game, there is a
+deterministic engine behind the game, even if we used tricks and "random" picks to simulate
+spontenaity, which... actually that's how life is, isn't it? I expect it to rain in November
+in the PNW, even if I can't predict exactly when and how.
+3. Fix to "Gargle" blaster
+4. Keep "pockets" in this case, because it's alliterative / a metaphore / imagination. The
+*game* (and the official docs describing actually-implemented code objects) has `inventory`, 
+but you can *imagine* yourself with *pockets* as you are playing (or not).
+5. cap the entry length like you said
+6. red as uncrossed doors in general is good design -- decided
+7. yes, plain css. I understand no fill -- there is hatching and cross hatching if we need it
+8. check where you used phrases like "the room builder" because "builder" read to me as software,
+the app. Use "the author" to mean "the person that creates the room content".
+9. room gets an actual ID; world and name combo is required unique.
+10. drawing needs a default folder with some funny "random" drawings in there (that I will supply,
+but put that in the design so that it gets included in an actual sprint later).
+11. what is this? (| `gives` | gift | no | goes into the inventory when the room is solved |). I
+was too young to play actual zork. I kinda just wanted something like the bell jar to become
+a takeable item when the room is solved... I didn't want to player to just "get" it. I wanted
+them to have to think about taking it and try to take it. I don't know why we need a "gift"
+mechanic beyond a "take" or "drop" mechanic. If there are NPCs in the game, you could "give"
+them something, which means it would come *out* of inventory, and "use" would do the same
+when building or making something, and maybe "give" and "use" should be synonyms? Because solving
+the gold foil experiment is a simple puzzle. But there is a ruler there -- they have to measure
+the distance, and that gets recorded in the journal as (I have to do research -- whatever the
+actual discovery measured) including some representative number. But then, later in the game,
+when the player is meant to discover up / down other worlds, they are meant to "take" the jar
+and bring it "up" a tree or "up" in a baloon or whatever and see a different number (maybe the
+jar has a ruler drawn on it, idk, that's content design later) but what I mean is, solving the
+puzzle and getting the reward of the drawing and the journal entry is a reward for the first
+real puzzle room. But then realizing that you can *take* the jar into your inventory is another
+discover. Experienced gamers will probably try to take it right away, but n00bs like myself
+might take a while and require a hint hours into gameplay ;) Currently there are no NPCs, so we
+don't need to design every verb now -- keep an MVP set that will be for the first couple "rooms"
+(I guess we should play in the chat before deciding which are MVP and which are for later and
+splitting them in the design doc or moving the out of scope ones to techdebt).
+
+ok now I've read the give section in design.md -- maybe you are saying "give" is just what the room *can* give (and therefore what a player can "take" by typing "take <item>", not that the item immediately shows up in the players inventory -- I think that's probably the mechanic that I'm imaginging and straighforward to implement.
+12. regarding zork vs vi conflicts -- Let's write the inspiration and learning of zork, bash,
+and vi like you did; we don't have to define a heirarchy but I think it will likely fall out as
+zork, bash, and vi; but I can also imagine a puzzle that *unlocks* vi-type commands, and the
+player would learn to do like type vi, press enter, some options are shown to the user in gray
+font (vi commands), then the user learns to type i for insert etc etc in a mini-came. This can 
+be techdebt idea for a future puzzle, which may require new logic and implementation -- I can
+imagine letting the user edit the previous terminal text or the text the game gave it and that
+being how you solve the puzzle. For now, capture the design inspiration, the techdebt puzzle
+item for vi puzzle, and define only a small group of commands in MVP that we'd need to run the
+first ~3 rooms or so. I don't think we need to implement `l` just yet. People should type "look",
+using natural language to start. We can introduce shortcuts as a puzzle later too (put that in
+a separate techdebt for a "shortcuts" puzzle -- I'm sure there is fascinating history and fascinating
+related "technology" here to explore).
+13. "read journal" I'm not exactly sure what you mean. In the first 3 rooms which we should start
+MVP with, all the journal entries should fit on one page, so pagination comes later (a techdebt item).
+I could see that "read journal" in the mailbox puzzle just means that the journal opens and the
+first puzzle is solved to start the game. But in other rooms, or after that first solve, "read
+journal" could open a table-of-contents or other pagination helper for when the game grows. We
+don't need to design this now -- MVP should be the first ~3 puzzles (getting the player from setup,
+easy learnings, into the house and solve the gold foil puzzle). In the design, the journal is always
+shown (once it's first discovered) in the left-most section (at least in MVP). It's not like Zork
+where there was no helper UI sections for map and journal. If they want to read the journal, they
+can... just read it. Though... later "read journal" could be the implementation of "give authors a
+place to put longer details of the technology!" -- yeah, capture that in tech debt too.
+14. Drop mean leave the item in the room (add it to the "give" list of the room) but...
+is that possible with our current mechanics? I think not. I think don't give them a drop
+command right now (drop is not an MVP verb). Drop was for *managing* inventory in zork. Put it
+in the engine commands and respond "oops you dropped this, let me put that back for you." And
+then flash the item in the inventory 1x. There. simplified. We don't manage inventory in this
+game -- that's the first thing to be ignored when playing RPGs for a reason. It's no fun!
+15. Restart -- I guess? I'll take your advice but... I mean whatever xyzzy does for Eliza
+is probably what this needs. I wonder if Eliza and this game can share some json entries / files
+/ engine mechanics? Should probably consider that.
+16. I take your entry length proposal for entry chars
+17. Easter egg answers -- just find the wikipedia page for those things right now and link that.
+I think that might 
