@@ -13,26 +13,26 @@ experiment or invention. Solving one inks a square on a map and writes an entry 
 game
 ├── authored                       written by a room author
 │   ├── verb dictionary            one for the whole game
-│   ├── engine responses           no match, unmet requirements, movement, look, help
+│   ├── engine                     commands, responses, easter eggs, settings
 │   └── worlds
 │       └── world                  appears
 │           └── room
 │               ├── the place      solving the mystery
-│               │   ├── name, coords, appears, text, drawing, gives
+│               │   ├── name, coord, appears, text, looks, drawing, gives, takes
 │               │   ├── edges      N E S W: kind, requires, to
 │               │   ├── portals    to, color, requires
-│               │   └── triggers   verbs, nouns, regex, requires, sets, say, solves
+│               │   └── triggers   verbs, nouns, phrases, regex, requires, sets, say, solves
 │               └── journal        looking back on what you learned
 │                   ├── group
 │                   ├── entries    year, who, what, summary (one is picked)
 │                   └── links
 ├── saved                          the player's progress, in the browser
-│   └── where you are, visited squares, solved rooms, inventory, steps per room
+│   └── where you are, visited squares, solved rooms, inventory, steps per room, journal picks
 └── derived                        rebuilt from the two above, never stored
     ├── group index                the server reads every world file
     ├── journal                    solved rooms' entries, laid out in group boxes
     ├── map                        world shape + visited + solved
-    └── inventory strip            solved rooms' gives
+    └── inventory strip            what solved rooms gave, minus what they took
 ```
 
 Only the authored files and the saved progress are real. Everything a player looks at is rebuilt
@@ -43,13 +43,13 @@ from them. Record the endpoints, reconstruct the rest.
 | word | means | the player sees |
 |------|-------|-----------------|
 | `world` | a set of rooms with its own theme and its own map, loaded on its own | a floor, the woods, a wing |
-| `room` | one puzzle to solve and learn from, at one map square (or a list of squares) | a place: a cellar, a clearing; never the word "room" |
-| one big room | the world the player imagines from the map layout and the room text | not a data structure |
+| `room` | one puzzle to solve and learn from, at exactly one map square | a place: a corner of a basement, a clearing; never the word "room" |
+| one big room | the space the player imagines from the map layout and the room text | not a data structure |
 | `edge` | one side of a room's square; its `kind` says what it is | |
 | `door` | an edge the player can cross | a passage; never the word "door" |
-| `portal` | a way up, down, or elsewhere, inside a square | stairs, a ladder, a hatch |
+| `portal` | a way up, down, or elsewhere, inside a square | stairs, a ladder, a hatch, a blue square |
 | `trigger` | words a room answers to | |
-| `item` | what a solved room gives | what's in your pockets |
+| `item` | what a solved room gives, in a count | what's in your inventory |
 | `journal` | a room's record: its group, its possible entries, its links | |
 | `entry` | one possible record of a solved room | in science rooms, a `discovery` |
 | `group` | rooms recorded together in the journal | in science rooms, a `technology` |
@@ -59,7 +59,7 @@ Player-facing text never says "room" or "door." The plumbing has doors on every 
 has a cellar, a hallway, a clearing.
 
 `discovery` and `technology` are the teaching words, for rooms about real science. `entry` and
-`group` are the general words, so other kinds of rooms fit on the map too: Front of House teaches
+`group` are the general words, so other kinds of rooms fit on the map too: West of House teaches
 no discovery and still writes an entry.
 
 # Authored
@@ -82,7 +82,22 @@ A room has two halves, because an author designs it in two modes:
   solving.
 
 A room owns everything about itself. The only things it doesn't own are game-wide: the verb
-dictionary and the engine's responses.
+dictionary and the engine.
+
+### One room, one square
+
+- Every room object is one square: one coordinate, all the same size.
+- A big space lives in the player's imagination, not in the data. One square has a desk and a lamp;
+  the next has an easy chair and a window. They're "in the same room" for the player and the
+  author, and the map says so with fold creases between them in place of solid lines.
+
+### Room identity
+
+- A room's ID is its world plus its name. Rooms are self-contained objects that interact only the
+  way parts of a distributed system do, so a name is enough.
+- Checks catch duplicates: the loader, the room builder, and later CI.
+- The cost: saved progress records rooms by name, so renaming a room after people have played it
+  forgets their progress there. A separate `id` can come later if that starts to hurt.
 
 ### Rooms can take over a square
 
@@ -105,9 +120,10 @@ dictionary and the engine's responses.
   door. That's the Zork trick, kept on purpose, because finding it out is a lesson in itself.
 - A room says what an edge *is* (`kind`), and the map decides how to draw it. A new kind like
   `window` needs a new drawing and no room edits.
-- A missing side means no way through yet. The player should get a hint that something is there
-  to unlock later.
-- Portals lead up, down, or to another world. They sit inside a square, not on its edges.
+- A missing side draws nothing, and the blank *is* the hint. Squares mark their ways out with
+  compass letters, so a side with no letter and no line reads as "not yet."
+- Portals lead up, down, or to another world. They sit inside a square, not on its edges. A
+  portal's color is how a player can name it: "the blue square."
 
 ### Triggers: solving and matching
 
@@ -116,21 +132,44 @@ dictionary and the engine's responses.
   step lists to track.
 - Most puzzles are verb + noun. "I open the mailbox" opens it; "I look at the mailbox" doesn't,
   because *look* isn't one of its verbs.
-- The plain word lists match whole words exactly, ignoring case and punctuation. They're the
-  readable default for people learning to write rooms, and "nice" never fires "ice."
+- The plain lists match exactly, ignoring case and punctuation: word lists match whole words,
+  phrase lists match the whole input. They're the readable default for people learning to write
+  rooms, and "nice" never fires "ice."
 - Regex is for everything else: easter eggs, passwords with a twist, the things that aren't "I do
   the thing." Partial matching lives only there, in the field that looks like code.
 - (The lineage: Colossal Cave Adventure in 1976 read two-word commands from a closed vocabulary.
   Zork, a year later, could parse "put the sword in the case." The cave sits between them.)
 
+### Looking at things
+
+`look` on its own repeats the room's text, and the engine handles it. Looking *at* something needs
+the author: the room lists the things worth looking at and what you see. That's where the
+description lives that solving doesn't need but noticing does: the black mailbox, the red flag,
+the house number.
+
+### Text can vary
+
+- Any text a player reads (a room's `text`, a trigger's `say`, a `look`) can be one string or a
+  list, and a list is picked fresh each time. That's the homepage's intermittent reward, carried
+  down into the cave.
+- The risk: a clue that's only in one variant can be missed. Text can be marked as a clue, and the
+  room builder reminds the author that every variant has to carry it. The author decides; it's
+  their room.
+
 ### Items connect rooms
 
 - Rooms connect only through items.
 - Steps inside a room stay in the room. "The knob was turned" never leaves the cellar.
-- A room gives one item when it's solved, and players can't pick up anything else.
+- It's an inventory, not pockets: no physics of what a body can carry. Inventory is a game
+  thing, and that's all it is.
+- A room gives an item when it's solved, in a count ("give the player 3 latex"), because one
+  room's output can feed several later rooms. Each item has a maximum, so 3 latex is enough and
+  1000 never happens.
+- A room can take items when it's solved. Latex gets used up and turns into rubber.
+- Players can't pick up anything a room doesn't give.
 - A long chain (tap latex in the woods, vulcanize it at a furnace, stamp stoppers, then do vacuum
-  experiments) needs no chain logic. Each room checks only for the item it needs. The inventory is
-  the save file.
+  experiments) needs no chain logic. Each room checks only for the items it needs. The inventory
+  is the save file.
 - A visitor's room can depend only on items, and items have names you can see. A visitor's room
   can't reach into the middle of yours.
 
@@ -140,24 +179,53 @@ dictionary and the engine's responses.
 - The group is said once, in the journal block, because that's where an author sees it.
 - An entry has `year`, `who`, `what`, and `summary`, all optional. A room with no entry writes
   nothing in the journal.
-- A room can hold several possible entries, and one is picked at random. Front of House has a shelf
-  of postal history to choose from.
-- Learning links are for further learning or rabbit holing. Clicking the room's journal entry opens
+- A room can hold several possible entries, and one is picked at random when the room is solved.
+  Then it's kept: ink doesn't change. West of House has a shelf of postal history to choose from.
+- Learning links are one list for the room. Every click on the room's journal entry opens another
   one at random in a new tab: the homepage's coin flip, aimed at learning more about the real
-  thing.
+  thing. The fun is in the loose, slightly edgy correlation between them, so every link should
+  relate to the room and to the others.
+- Entries are short. The box is sized one line per entry, so each entry has to fit its line, and
+  the links carry the depth.
 
 ## Verb dictionary
 
 - A small dictionary sits between the plain word lists and regex. Rooms name a plain verb, the
-  dictionary holds its synonyms, and players see the short list as a helper when they don't know
-  what to type.
+  dictionary holds its synonyms, and the engine accepts all of them.
+- The dictionary is the shared vocabulary between author and player, a Simple English Wikipedia for
+  both. The room builder shows it to authors so they remember to use the common verbs. The game
+  shows it to players who seem stuck, which moves them from recalling a command to recognizing
+  one.
 - One dictionary for the whole game, so OPEN means the same thing in every world.
 
-## Engine responses
+## The engine
 
-What the game says when no room has an answer: nothing matched, a requirement isn't met, the
-player moves, looks around, checks their pockets, or asks for help. These are game-wide and
-written once, not per room. What they say is still open (questions 7–9).
+What the game does when no room is the answer. It's game-wide and written once.
+
+### Commands
+
+- Commands that do the same thing in every room belong to the engine: moving, looking around,
+  checking the inventory, help, using a portal.
+- They copy Zork's, shortcuts included (N, E, L, I, Q).
+- Extra shortcuts teach real tools: Unix commands (`ls`, `cd`, `pwd`, `cat`, `man`) and vi
+  (`:q`, `hjkl`). A player who learns them here can use them at a real prompt.
+- Using a portal has its own phrase list, from "use the portal" to "Second star to the right and
+  straight on 'til morning."
+
+### Responses
+
+- When nothing matches, or a trigger's words match but its requirements don't hold, the engine
+  answers with a quote from science fiction, picked at random. Each case has its own list.
+- Help comes in two kinds. Commands that do the same thing everywhere are the engine's. Common
+  verbs are the dictionary's, shown to a player who has spent a long time in one room or taken
+  many turns there without solving it. Both thresholds live in one settings file, where they're
+  easy to change.
+
+### Easter eggs
+
+Zork's and Adventure's magic words get answers: `xyzzy`, `plugh`, `hello sailor`, `zork`, and Warren
+Robinett, who signed his name in a secret room in Atari's *Adventure* (1980), one of the earliest
+known video game easter eggs.
 
 # Saved
 
@@ -165,14 +233,15 @@ written once, not per room. What they say is still open (questions 7–9).
 
 - One player. No accounts, no auth.
 - Progress saves in the browser and survives across visits: where you are, which squares you've
-  visited, which rooms you've solved, your inventory, and each room's steps.
+  visited, which rooms you've solved, your inventory with counts, each room's steps, and which
+  journal entry each solved room got.
 
 ## Your own files
 
 - Rooms a player builds are JSON files they save and load themselves. A web page can't open a
   folder by path, so Save downloads a file and Load takes one handed over (picker or drag-and-drop).
-- Shared storage, accounts, and multiplayer can come later. The format shouldn't block them, and
-  nothing gets built for them now.
+- Shared storage, accounts, multiplayer, and sending feedback to a room's author can come later.
+  The format shouldn't block them, and nothing gets built for them now.
 
 # Derived
 
@@ -193,12 +262,14 @@ with historical context where it's relevant. It produces a journal a bit like th
 scientists and engineers keep: a conflict between thematic and chronological order.
 
 - When a player enters a room whose group they haven't seen before, a new, blank group box is drawn
-  under or next to the previous one, sized to the number of entries in the group.
-- Entry slots inside a group box are ordered by `year`, but nothing is drawn in a slot until the
+  under or next to the previous one, sized one line per entry in the group.
+- Reserved lines stay blank. It's a mystery, and the box itself is the hint.
+- Entry lines inside a group box are ordered by `year`, but nothing is drawn on a line until the
   player solves that room.
-- When a player solves a room, its entry is animated into the slot reserved for it.
+- When a player solves a room, its entry is animated onto the line reserved for it.
 - When a player completes a group, its box is redrawn in a darker shade, it flashes, and the group's
   name is written at the top.
+- An entry with no group sits loose between the boxes.
 
 ## The map
 
@@ -206,14 +277,20 @@ scientists and engineers keep: a conflict between thematic and chronological ord
 - A square's edges are drawn only once the player has visited it.
 - Each room draws its sides just inside its own square, so a one-way door shows a crease on one
   side of the edge and a wall on the other. The map teaches the trick.
+- Each visited square marks its doors with small black compass letters (N, E, S, W). When a newer
+  room takes over a square and opens a way that wasn't there before, that letter is red until the
+  player goes through it.
 - Portals are colored square outlines nested inside the square.
-- A solved room's drawing is inked into its square, stroke by stroke.
+- A solved room's drawing is inked into its square, stroke by stroke. The drawings are line art,
+  plain strokes, which is what lets them draw themselves.
 - Clicking an inked square scrolls the journal to that room's entry. The map is the journal's table
   of contents.
 
 ## The inventory strip
 
-A strip across the top of the journal and map, showing what's in the player's pockets.
+A strip across the top of the journal and map. Each item is a small drawing with its name
+underneath, and a count when there's more than one. Items are more colorful and more solid than the
+map's line drawings, so the two never get confused.
 
 # On screen
 
@@ -223,143 +300,48 @@ A strip across the top of the journal and map, showing what's in the player's po
   the journal and map.
 - With the journal always in view there's no zoom. The reveal is the map drawing the room's
   picture, then the journal handwriting the entry.
-- The room builder is a form that fills in a new room record, so players see how a room is made and
-  can make their own.
+
+## The room builder
+
+- A form that fills in a new room record, so players see how a room is made and can make their own.
+- It shows the verb dictionary as suggestions, so authors remember the verbs players will try.
+- Above every text box, a small gray note: "Is this a clue? Remember: every variant has to carry
+  the clues."
+- On submit, a field marked as a clue with several variants gets one question: "You made multiple
+  options in this field and it's marked clue. Do they all give the same clue, no matter which
+  variation the player gets?" Yes or no, and the author's answer stands.
 
 ## A website, not an app
 
 The cave is old-style computer stuff on a desktop screen. A phone version would be a different
 design and probably a real app, and it's out of scope.
 
-# The first room: Front of House
+# The first room: West of House
 
-- (0,0) is Front of House and its mailbox. Opening the mailbox solves it, and what's inside is the
-  journal with its fold-out map.
+- It opens the way Zork opens, word for word: "**West of House.** You are standing in an open field
+  west of a white house, with a boarded front door. There is a small mailbox here." (Zork I's source
+  has been MIT-licensed since November 2025.)
+- The mailbox goes further than Zork's. It's black with a red flag, its house number is 2112, and
+  "memory" is painted on its side in white letters: a callback to Eliza's memory partition, and a
+  nod to the journal and to all written text as cognitive offloading.
+- The player types what Zork players typed: "open mailbox", "read journal".
+- Opening the mailbox solves the room, and what's inside is the journal with its fold-out map.
 - Its drawing on the map is the journal itself, a picture that contains itself (*mise en abyme*).
-- Non-discoveries like the mailbox still get journal entries. They're where the diffuse clues and
-  rabbit holes go: postal history, Zork's own mailbox.
+- Its journal entry is a non-discovery, which is where the diffuse clues and rabbit holes go:
+  postal history, Zork's own mailbox.
+- The house is to the east, as in Zork. With east as +x, the house is at (1,0).
 
 # Open questions
 
-1. **Room identity.** Is a room's `name` also its ID (used by `solved` and by groups), or does it
-   get a separate `id` so it can be renamed?
-   - A: name + world is the room's ID; we'll have to make CI / tests / load room features that
-   check for duplicates. we can add an ID later if we need it, but the whole point is that
-   rooms are self-contained objects that interact only in a distributed system; argue against me
-   if you disagree.
-2. **`takes`.** Do items get used up (the latex turns into rubber), or do pockets only grow?
-   - A: it's not pockets -- not all genders have #pocketequalitynow so we need to say "inventory".
-   Also, I'm not interested in the physics of what "pockets" can hold and what "players" can cary.
-   This is an "inventory" in a game (so far) and that's it. Yes, items get used up. Items should
-   also have a max field, and when you get an item, there should be a way for the authors to say:
-   "give the player 3 'latex' items", knowing that they will need to maybe later turn them into
-   multiple other things. The items need a max as well (3 latex items is enough; 1000 is too many).
-3. **Random journal picks.** Picked once at the solve and kept (ink doesn't change), or picked
-   fresh each time?
-   - A: Picked once when the room is solved and kept.
-4. **Links per entry.** Links live in the room's journal block. Should an entry be able to carry
-   its own links too (the Trollope entry wants the Trollope link)?
-   - A: No, links are just a list; Player can keep clicking the journal entry and new tabs will
-   just keep opening according to the random picker. The point is the fun and loose-therefore-edgy
-   correlation between the concepts or items or technologies, so all the links should be
-   correlated to each other and to the room. If that doesn't turn out to be the case, we can
-   reconsider, but I can't think of a case now.
-5. **Ungrouped entries.** Where does an entry with no group go: its own one-slot box, or loose
-   between boxes?
-   - A: loose bewteen boxes
-6. **Lists everywhere.** Can any text field (`say`, `text`) be a list with a random pick, the way
-   the homepage rules work?
-   - A: Any text can be a list, picked fresh each time. Note that the editor has to have a warning
-   (e.g. small grey text) above the text edit box for this field to remind or teach the author: "Is 
-   this a clue? [And if so], rembmer: every variant has to carry the clues." In fact, we should
-   have a boolean field for `is_clue`, so that a checker script can flag issues (e.g. if we ever
-   implement semantics or LLM help, which is out of scope now), but even now can do a simple
-   modal on submit: "you made multiple options in this field and it's marked clue -- do they 
-   all give the same clue, no matter which variation the player gets?" with a yes/no for the
-   author, and final choice owned by the author (they can violate if they want, it's their room).
-   Mmm. Capture a tech debt for being able to capture feedback for the room; I don't know how (we
-   don't have a persistence layer), but even something simple like "email the room author your
-   feedback" could be done (and yes I know that's bad idea from a spam perspective, that's why
-   this is tech debt). Create a techdebt.md file in docs/scripts/ for this purpose. When I init
-   sprinter kit I'll make ids for them.
-7. **Unmet requirements.** What does the engine say when a trigger's words match but its
-   requirements aren't met?
-   - A: Let's quote famous sci fi. Here's a list: ["You must know that a person’s ability to
-   discern the truth is directly proportional to his knowledge (or what's in his pockets)", "Put
-   your right hand in the box (the inventory box)", "Should philosophy guide experiments, or should
-   experiments guide philosophy?", "If only I had my sonic screwdriver on me", "If only someone
-   had already invented the flux capacitor...", "There is an art, it says, or rather, a knack to
-   flying", "Get to the choppa", "Was there anything more exciting in life than seeking answers?"]
-8. **No match.** What does the engine say when nothing matches?
-   - A: Let's quote famous sci fi. Here's a list: ["Pan Galactic Garble Blasters!", "My hands are dirty
-   too, what are you afraid of?", "You dead awhile there, mon.", "Probably got him on ice. Thaw
-   when needed.", "Better to stay alive, at least while there's a chance to get free.", "Yet in a few years an illiterate runaway named Harriet Tubman would make nineteen trips into this country and lead three hundred fugitives to freedom.", "As a kind of castaway myself, I was happy to escape into the fictional world of someone else’s trouble.", "we're going to have to play the roles you 
-   gave us.", "Let's go to Las Vegas and pretend we haven’t got any relatives.", "To get along with
-   God, consider the consequences of your behavior", "I can only dance in my chains.", "In the face 
-   of madness, rationality was powerless", "I have a bad feeling about this"]
-9. **Engine commands.** Which commands does the engine handle (go north, n, look, inventory, help)?
-   - A: yes, all those, and I'll need help. I think this is probably fairly standard. Either
-   research this and come up with a reasonable list, or guess a few and we'll expand later. I'm
-   not sure "look" can be one because that will need a non-standard response (the author will
-   have to describe the thing you look at, provide that as an option). The engine commands that
-   do the same thing regardless of room (go north, n, inventory, help) are different than "a list
-   of common verb commands" that could help bring a player from recall mode to recognition mode.
-   A helper list should be supplied to a player that spends a long time in a room, or who takes
-   too many turns (take a guess how long and how many turns and make it obvious where to update
-   the value), and in the room editor, these suggestions should be there as well for the author
-   to remember to put them in -- a shared simple.wikipedia between author and player.
-
-   update: after looking up common beginning of Zork I see some common commands: leave,
-   take, drop, go. I'm sure you can look up what the commands were. I'd like to copy them,
-   as well as their shortcuts, and if we add other shortcuts, I'd like to make sure we are
-   teaching bash / unix commands and commands for the vi editor. We need easter eggs here
-   like xyzzy, plugh, hello sailor, the name of the guy who put in the first easter egg,
-
-10. **Portals.** What does a player type to use one, and do the colors mean anything?
-   - A: this can be in the engine commands. It should be a list, here's a start: ["I use the
-   portal", "What is this blue square?", "How do I get to <world>?", "Go to <world>", "Let's
-   gooooooo!", "Allons-y!", "Second star to the right and straight on 'til morning", "To die
-   will be an awfully great adventure", "Punch it, Chewie!", "boldly go", "Let us go on and take
-   the adventures that shall fall to us", "mankind cannot stay in a cradle forever", "I'm going
-   on an adventure!] -- let's get some verb/noun and regex based on these exact-match quotes too.
-11. **Big rooms.** When a room covers several squares, which square's sides do its doors belong to?
-   - A: rooms do not cover several squares (this is a change in interface-spec.md -- no list
-   for the coordinate field in a room). An imagined space can be imaginged by the player as
-   "a big room", because that's what my physics basement and the underthing is, but each room
-   object in the game is one square, one coord, exactly the same size. You might have one square
-   with a desk and a lamp. Another might have an easy chair and a window. These might be "in the
-   same room" in the imagined world of the player and author, but the room object of the game
-   is simpler. The player knows that squares are part of "one big room" because they will see
-   the map creases drawn instead of a solid line or solid double line.
-12. **Items on screen.** Is an item in the inventory strip a word, or a small drawing?
-   - A: it's is both -- small drawing on the top, word on the bottom. We'll probably need to
-   make these more colored and 3D to distinguish from the design of the objects on the map.
-   Don't worry, I have the skills of an artist.
-13. **Reserved journal space.** Blank, or a faint hint (a year, an outline)?
-   - A: blank. it's a mystery. The box itself is the hint (one line per journal entry). I'm not
-   sure if we need a character limit on journal entries. I'm thinking yes, so that the entry
-   is only 1 line? And let the links cary the details and further learning? weigh in on this one.
-   We could add a tech debt later to expand if authors want to write more or link to an expanded
-   learning place of their own authorship.
-14. **The unlock-later hint.** If a missing side draws nothing, how does the player learn that
-    something is there?
-    - A: the missing side (no crease in the map, no border, nothing) *is* the hint. We should put
-    ~black N-E-S-W markers on squares that have passageways out of them at those directions.
-    Then, when the new room is unlocked, we can replace the room with a new room that has a *red*
-    N where previously there was none -- what do you think? too hard to begin with or easy?
-15. **Line drawing.** SVG files animated with the plain CSS stroke trick (`stroke-dashoffset`), or
-    a library like Vivus?
-    - A: I haven't seen Vivus, but I have seen the CSS stroke trick. Shall we start with CSS,
-    very simple, then ++ later if we want? Maybe put Vivus in techdebt? Which is easier from
-    implementation, understanding, and use perspectives?
-16. **The memory partition.** How much more obvious should the mailbox be?
-    - A: Ok finally I have looked up the actual Zork starting words. The location is not "Front
-    of Hosue", it is "**West of House.** You are standing in an open field west of a white house,
-    with a boarded front door. There is a small mailbox here." This is the actual opening text
-    that I want. But further than Zork, the mailbox has a house number on it: 2112. And it is
-    a black mailbox with a red flag, and on the mailbox is painted in white letters "memory,"
-    which calls back to Eliza's "memory partition," and is a nod to the journal and all written
-    text being cognitive offloading. The player needs to type "open mailbox" "read journal" etc,
-    just like the beginning of Zork.
-17. **The boarded front door.** How does the player get from (0,0) into the house at (0,1)?
-    - A: In Zork, the front door was "go East" or "E", so I chose (0,1) correctly.
+1. **The front door.** In Zork, the boarded front door never opens; players walk around the house
+   and climb in through a kitchen window. Does the cave keep the boards, or let east go straight
+   in?
+2. **`l` means two things.** Zork's L is look; vi's l is "move right" (east). Which wins, or does vi
+   movement stay out?
+3. **Reading items.** What does "read journal" do: show the journal column, highlight the latest
+   entry, both?
+4. **Dropping.** Inventory only shrinks when a room takes. What does the engine say to "drop
+   latex"?
+5. **Restart.** "restart" wipes saved progress. Ask "are you sure?" first?
+6. **Entry length.** One line per entry: how many characters? See the proposal in the spec.
+7. **Easter egg answers.** What does each magic word say back?
