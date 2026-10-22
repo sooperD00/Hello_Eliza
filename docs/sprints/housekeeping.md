@@ -29,11 +29,23 @@ on railway.
 - [ ] essay stylings
 
 ## Hardening
-- [ ] something that runs and checks if my links still work...
-	- external links flake: run it weekly in CI, not on every push
-- [ ] tests that test the site (the only test is the template's UnitTest1)
-	- [ ] C#: WebApplicationFactory smoke test, every route 200
-	- [ ] JS: node --test for the rules: phrase → which rule fires. the cloud PRs simulated this; keep the harness in the repo
+- [ ] [h-PLACEHOLDER] Connect Hello_Eliza.Tests to the app (project reference) and delete UnitTest1.
+- [ ] [h-PLACEHOLDER] Write the route smoke test with WebApplicationFactory: every route and every published essay slug answers 200. Every push.
+	- routes: /, /terminal, /cave, /privacy, /faq, /essays, /blogs
+- [ ] [h-PLACEHOLDER] Write the internal-link test on the same test server: every `/` link on each rendered page, and every path in zork-rules.json, answers 200. Every push.
+- [ ] [h-PLACEHOLDER] Write the content test: every published essay's front matter parses, and zork-rules.json parses. Every push.
+	- ParseEssay swallows errors and drops the essay, so today a front-matter typo makes an essay vanish silently
+- [ ] [h-PLACEHOLDER] Move the rule matcher out of zork.js into its own file (text + rules in, rule out), load it from the page, and test it with node --test: phrase → which rule fires. Every push.
+- [ ] [h-PLACEHOLDER] Write the link reader: one list of every external URL a visitor can reach, each with where it's used.
+	- reads: rules[].action (https only), each cave room's journal.links, published .md essays, faq.md, the footer
+	- skips: .txt drafts, README, docs/
+	- its shape test runs every push: each action is a /path or an https URL, each journal link is https
+- [ ] [h-PLACEHOLDER] Add the link-check workflow: lychee over the reader's list. Weekly, a run-now button, and on PRs that touch content (new links only).
+	- dead (404, 410, gone domain): one rolling GitHub issue, a `- [ ]` per link naming its rule, room or essay
+	- bot-blocked (403, 429, 999, repeat timeouts): same issue, under "check by hand"
+	- moved (301 to another page): same issue, under "worth a look"
+	- main never turns red
+- [ ] [h-PLACEHOLDER] After Railway is live: smoke the live routes on hello-eliza.net, and check that .me and .si 301 to .net.
 
 ## Documentation
 - [ ] update README.md for the new color scheme
