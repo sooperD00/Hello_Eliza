@@ -13,7 +13,7 @@ decided yet; see the open questions at the end of design.md.
 | shape | `[x, y]`, integers |
 | scope | per world; every world has its own (0,0) |
 | directions | N is +y, E is +x |
-| a room (one squares) | `[0, 0]` |
+| a room | exactly one square: `"coord": [0, 0]` |
 
 ## World file
 
@@ -22,7 +22,7 @@ One world per file. A world loads on its own.
 ```json
 {
   "world": "house",
-  "appears": { "requires": { "items": [], "solved": [] } },
+  "appears": { "requires": { "items": {}, "solved": [] } },
   "rooms": [ ]
 }
 ```
@@ -33,30 +33,65 @@ One world per file. A world loads on its own.
 | `appears` | `{ "requires": requires }` | no | the world exists only once this holds; omit it to have the world from the start |
 | `rooms` | list of rooms | yes | |
 
+## Text
+
+Anywhere a player reads text (`text`, `say`, a `looks` entry), the value can take three shapes:
+
+| shape | example | meaning |
+|-------|---------|---------|
+| a string | `"The flap drops."` | always this |
+| a list | `["The flap drops.", "It creaks open."]` | one picked fresh each time |
+| a clue | `{ "options": ["...", "..."], "is_clue": true }` | one picked fresh each time; the room builder checks that every option carries the clue |
+
 ## Room
 
-A room has two halves: the place, and its journal.
+A room has two halves: the place, and its journal. Its ID is its world plus its `name`.
 
 ### The place
 
 | field | type | required | meaning |
 |-------|------|----------|---------|
-| `name` | string | yes | the room's title, shown in the terminal; also its ID for now (open question 1) |
-| `coords` | list of `[x, y]` | yes | the square or squares it covers |
+| `name` | string | yes | the room's title, shown in the terminal; unique in its world |
+| `coord` | `[x, y]` | yes | its one square |
 | `appears` | `{ "requires": requires }` | no | omit it to have the room from the start; a room that takes over a square requires the old room in `solved` |
-| `text` | string | yes | what the terminal shows on arrival |
-| `drawing` | path to an `.svg` | no | inked on the map when the room is solved; replaces any earlier room's drawing in that square |
-| `gives` | item name | no | goes into the inventory when the room is solved |
-| `takes` | list of item names | no | **proposed**: leaves the inventory when the room is solved (open question 2) |
+| `text` | text | yes | what the terminal shows on arrival, and again on `look` |
+| `looks` | list of looks | no | what you see when you look at something here |
+| `drawing` | path to an `.svg` | no | inked on the map when the room is solved; strokes only; replaces any earlier room's drawing in that square |
+| `gives` | gift | no | goes into the inventory when the room is solved |
+| `takes` | `{ "<item>": count }` | no | leaves the inventory when the room is solved |
 | `doors` | edges | no | the four sides; a missing side is blank and closed |
 | `portals` | list of portals | no | ways up, down, or elsewhere, drawn inside the square |
 | `triggers` | list of triggers | yes | what the room answers to; exactly one has `"solves": true` |
-
-### The journal
-
-| field | type | required | meaning |
-|-------|------|----------|---------|
 | `journal` | journal block | no | how the room is recorded; omit it and the room writes nothing |
+
+### Looks
+
+```json
+"looks": [
+  { "nouns": ["mailbox", "box"], "text": "A black mailbox with a red flag. The number on it is 2112, and someone has painted MEMORY on its side in careful white letters." }
+]
+```
+
+| field | meaning |
+|-------|---------|
+| `nouns` | the words that name this thing |
+| `text` | text: what you see |
+
+The engine answers "look at", "examine", and "x" with these. A thing with no entry gets a no-match
+response.
+
+### Gift
+
+```json
+"gives": { "item": "latex", "count": 3, "max": 3, "drawing": "items/latex.svg" }
+```
+
+| field | type | meaning |
+|-------|------|---------|
+| `item` | string | the item's name; the room that gives it owns the name |
+| `count` | number | how many; default 1 |
+| `max` | number | the most a player can hold; extra is dropped; **proposed** default 1 |
+| `drawing` | path to an `.svg` | its picture in the inventory strip; colored and solid, unlike map drawings |
 
 ## Requires
 
@@ -64,13 +99,13 @@ The same shape everywhere: worlds, rooms, edges, portals, and triggers. Every fi
 and every listed thing must hold.
 
 ```json
-{ "items": ["latex"], "solved": ["Front of House"], "steps": ["charged"] }
+{ "items": { "latex": 2 }, "solved": ["West of House", "woods/Rubber Tree"], "steps": ["charged"] }
 ```
 
 | field | holds when |
 |-------|------------|
-| `items` | each item is in the inventory |
-| `solved` | each named room has been solved, in any world |
+| `items` | the inventory has at least that many of each; **proposed**: a plain list like `["latex"]` means one of each |
+| `solved` | each named room has been solved; a bare name means this world, **proposed** `"world/name"` for another |
 | `steps` | each step was set earlier **in this same room** (by a trigger's `sets`) |
 
 ## Edges
@@ -79,7 +114,7 @@ and every listed thing must hold.
 "doors": {
   "N": { "kind": "door" },
   "E": { "kind": "wall" },
-  "S": { "kind": "door", "requires": { "items": ["lantern"] }, "to": { "world": "woods", "coords": [0, 0] } },
+  "S": { "kind": "door", "requires": { "items": { "lantern": 1 } }, "to": { "world": "woods", "coord": [0, 0] } },
   "W": { "kind": "boundary" }
 }
 ```
@@ -89,7 +124,7 @@ and every listed thing must hold.
 | key | `N`, `E`, `S`, `W` | the side of this room's square |
 | `kind` | `door`, `wall`, `boundary`; more later (`window`) | what the edge is; only `door` can be crossed |
 | `requires` | requires | needed to cross; omit it to require nothing |
-| `to` | `{ "world", "coords" }` | only on a world's edge; any other door leads to the next square over |
+| `to` | `{ "world", "coord" }` | only on a world's edge; any other door leads to the next square over |
 
 - Each room owns all four sides. Crossing uses the side of the room you're leaving, so two rooms
   that disagree make a one-way door.
@@ -99,14 +134,14 @@ and every listed thing must hold.
 
 ```json
 "portals": [
-  { "to": { "world": "upstairs", "coords": [0, 0] }, "color": "<color>", "requires": { } }
+  { "to": { "world": "upstairs", "coord": [0, 0] }, "color": "blue", "requires": { } }
 ]
 ```
 
 | field | meaning |
 |-------|---------|
 | `to` | the world and square it leads to |
-| `color` | the outline color on the map |
+| `color` | the outline color on the map, and a word players can use for it ("the blue square") |
 | `requires` | needed to use it; omit it to require nothing |
 
 ## Trigger
@@ -114,7 +149,8 @@ and every listed thing must hold.
 ```json
 {
   "verbs": ["open"],
-  "nouns": ["mailbox", "partition", "box"],
+  "nouns": ["mailbox", "box", "partition"],
+  "phrases": [],
   "regex": [],
   "requires": { },
   "sets": [],
@@ -127,10 +163,11 @@ and every listed thing must hold.
 |-------|------|---------|
 | `verbs` | list of dictionary verbs | |
 | `nouns` | list of words | |
+| `phrases` | list of strings | |
 | `regex` | list of patterns | |
 | `requires` | requires | the trigger fires only when this holds |
 | `sets` | list of step names | remembered in this room only |
-| `say` | string | shown in the terminal when it fires |
+| `say` | text | shown in the terminal when it fires |
 | `solves` | bool | firing this solves the room |
 
 **When it fires.** Matching is case-insensitive and ignores punctuation.
@@ -138,11 +175,13 @@ and every listed thing must hold.
 | the trigger has | it fires when the input has |
 |-----------------|------------------------------|
 | `verbs` and `nouns` | one of the verbs (or a synonym from the dictionary) **and** one of the nouns, as whole words |
-| `nouns` only | one of the nouns as a whole word: an exact-word list for passwords and answers |
+| `nouns` only | one of the nouns as a whole word |
+| `phrases` | exactly one of the phrases, as the whole input |
 | `regex` | a match for any pattern, anywhere in the input |
 
-A trigger with both word lists and `regex` fires on either. **Proposed**: when two triggers in a
-room could fire, the first one listed wins, the same rule as the homepage.
+A trigger fires on any of its lists. **Proposed**: when two triggers in a room could fire, the
+first one listed wins, the same rule as the homepage. When a trigger's words match but its
+`requires` doesn't hold, the engine answers with an `unmet` response.
 
 ## Journal block
 
@@ -158,20 +197,27 @@ room could fire, the first one listed wins, the same rule as the homepage.
 
 | field | type | meaning |
 |-------|------|---------|
-| `group` | string | the group the room is recorded in; said once, for every entry |
-| `entries` | list of entries | the possible records of this room; one is picked at random |
-| `links` | list of URLs | clicking the room's journal entry opens one at random in a new tab |
+| `group` | string | the group the room is recorded in; said once, for every entry; omit it and the entry sits loose between boxes |
+| `entries` | list of entries | the possible records of this room; one is picked at random when the room is solved, then kept |
+| `links` | list of URLs | each click on the room's journal entry opens one at random in a new tab |
 
 ### Entry
 
 | field | type | meaning |
 |-------|------|---------|
-| `year` | number | negative for BCE; slots in a group box sort by it |
+| `year` | number | negative for BCE; lines in a group box sort by it |
 | `who` | string | |
 | `what` | string | the experiment, paper, or invention |
 | `summary` | string | |
 
 All optional. An entry with none of them writes nothing.
+
+**Proposed** length rule (open question 6), so each entry fits its one line:
+
+| part | limit | shown |
+|------|-------|-------|
+| `year`, `who`, `what` | `who` ≤ 30 and `what` ≤ 40 characters | the line itself: `1839 Charles Goodyear: vulcanization` |
+| `summary` | ≤ 140 characters | on hover over the line |
 
 ## Verb dictionary
 
@@ -181,14 +227,148 @@ the synonyms players can also type.
 ```json
 {
   "open":  ["lift", "unlatch", "pry"],
-  "touch": ["tap", "poke"]
+  "take":  ["get", "grab", "pick up"],
+  "read":  ["cat"],
+  "touch": ["tap", "poke", "feel"],
+  "turn":  ["twist", "rotate", "dial"],
+  "push":  ["press", "shove"],
+  "pull":  ["yank", "tug"],
+  "put":   ["place", "insert"],
+  "climb": ["scale"],
+  "light": ["ignite", "kindle"]
 }
 ```
 
-## Engine responses
+(A starting list, drawn from Zork's own verbs.)
 
-Game-wide, written once. The format is undecided (open questions 7–9): no match, unmet
-requirements, movement, look, inventory, help.
+## Engine
+
+Game-wide, written once. **Proposed** file: `engine.json`.
+
+### Commands
+
+Zork's commands and shortcuts, plus Unix and vi shortcuts that teach real tools.
+
+| command | also | does |
+|---------|------|------|
+| `north`, `south`, `east`, `west` | `n` `s` `e` `w`, `go <dir>`, `walk <dir>`; vi `k` `j` `l` `h` (open question 2) | crosses that side's door |
+| `cd ..` | `back` | goes back to the last square |
+| `up`, `down` | `u`, `d`, `climb` | uses a portal, if the square has exactly one |
+| `look` | `l`, `ls` | shows the room's `text` again |
+| `look at <thing>` | `examine <thing>`, `x <thing>` | shows that thing's `looks` text |
+| `inventory` | `i` | lists what you carry |
+| `read <item>` | `cat <item>` | open question 3 |
+| `where am I` | `pwd` | names the world and the square |
+| `help` | `?`, `man`, `:help` | lists these commands and the dictionary's verbs |
+| `again` | `g` | repeats the last input |
+| `restart` | | wipes progress (open question 5) |
+| `quit` | `q`, `:q`, `exit` | **proposed**: back to the homepage terminal |
+
+### Portal phrases
+
+Any of these uses a portal. With several portals in one square, a color ("the blue square") or a
+world name picks one.
+
+```json
+"portal": {
+  "phrases": [
+    "I use the portal", "What is this blue square?", "Let's gooooooo!", "Allons-y!",
+    "Second star to the right and straight on 'til morning", "To die will be an awfully great adventure",
+    "Punch it, Chewie!", "boldly go", "Let us go on and take the adventures that shall fall to us",
+    "mankind cannot stay in a cradle forever", "I'm going on an adventure!"
+  ],
+  "verbs": ["use", "enter", "take"],
+  "nouns": ["portal", "square"],
+  "regex": [
+    "how do i get to (?<world>.+)", "^go to (?<world>.+)", "\\b(?<color>\\w+) square\\b",
+    "let'?s go+!*", "\\ballons-?y\\b", "second star to the right", "\\bpunch it\\b",
+    "\\bboldly go\\b", "going on an adventure"
+  ]
+}
+```
+
+### Responses
+
+One is picked at random each time.
+
+```json
+"responses": {
+  "unmet": [
+    "You must know that a person’s ability to discern the truth is directly proportional to his knowledge (or what's in his pockets)",
+    "Put your right hand in the box (the inventory box)",
+    "Should philosophy guide experiments, or should experiments guide philosophy?",
+    "If only I had my sonic screwdriver on me",
+    "If only someone had already invented the flux capacitor...",
+    "There is an art, it says, or rather, a knack to flying",
+    "Get to the choppa",
+    "Was there anything more exciting in life than seeking answers?"
+  ],
+  "no_match": [
+    "Pan Galactic Garble Blasters!",
+    "My hands are dirty too, what are you afraid of?",
+    "You dead awhile there, mon.",
+    "Probably got him on ice. Thaw when needed.",
+    "Better to stay alive, at least while there's a chance to get free.",
+    "Yet in a few years an illiterate runaway named Harriet Tubman would make nineteen trips into this country and lead three hundred fugitives to freedom.",
+    "As a kind of castaway myself, I was happy to escape into the fictional world of someone else’s trouble.",
+    "we're going to have to play the roles you gave us.",
+    "Let's go to Las Vegas and pretend we haven’t got any relatives.",
+    "To get along with God, consider the consequences of your behavior",
+    "I can only dance in my chains.",
+    "In the face of madness, rationality was powerless",
+    "I have a bad feeling about this"
+  ]
+}
+```
+
+### Easter eggs
+
+Triggers in the trigger format, checked before the room's own. Answers are open question 7.
+
+```json
+"easter_eggs": [
+  { "phrases": ["xyzzy"], "say": "<...>" },
+  { "phrases": ["plugh"], "say": "<...>" },
+  { "phrases": ["hello sailor"], "say": "<...>" },
+  { "phrases": ["zork"], "say": "<...>" },
+  { "regex": ["warren robinett", "\\brobinett\\b"], "say": "<...>" }
+]
+```
+
+(Zork answers `xyzzy` with "A hollow voice says 'fool'.")
+
+## Settings
+
+One small file, so the numbers are easy to find and change. **Proposed** file: `settings.json`.
+
+```json
+{
+  "helper_after_turns": 10,
+  "helper_after_minutes": 3
+}
+```
+
+| field | meaning |
+|-------|---------|
+| `helper_after_turns` | inputs in one unsolved room before the game shows the dictionary's verbs |
+| `helper_after_minutes` | minutes in one unsolved room before the same |
+
+## Checks
+
+Run when a world loads, in the room builder, and later in CI.
+
+| check | if it fails |
+|-------|-------------|
+| world names are unique | refuse to load the second one |
+| room names are unique within a world | refuse to load the room |
+| one room per square, unless a later room `appears` after the earlier one is solved | refuse to load the later room |
+| every `solved` names a room that exists | warn |
+| every required or taken item is given by some room | warn |
+| rooms that give the same item agree on its `max` and `drawing` | warn |
+| `count` ≤ `max` | warn |
+| exactly one trigger per room has `"solves": true` | refuse to load the room |
+| trigger verbs are in the dictionary | warn |
+| saved progress names rooms that no longer exist | warn (a rename forgets progress) |
 
 # Saved
 
@@ -198,12 +378,13 @@ Saved in the browser (`localStorage`), kept across visits. **Proposed** key: `ca
 
 | field | holds |
 |-------|-------|
-| `at` | `{ "world", "coords" }` |
+| `at` | `{ "world", "coord" }` |
 | `visited` | squares visited, per world |
-| `solved` | room names |
-| `inventory` | item names |
+| `solved` | room IDs |
+| `inventory` | `{ "<item>": count }` |
 | `steps` | steps set, per room |
-| `journalPicks` | **proposed**: which entry each solved room got (open question 3) |
+| `journalPicks` | which entry each solved room got |
+| `crossed` | doors crossed, for the red compass letters |
 
 ## Your own files
 
@@ -226,24 +407,26 @@ Built by the server from every world file. **Proposed** route: `GET /api/cave/gr
 ```json
 {
   "rubber stopper": [
-    { "world": "woods",    "room": "rubber tree", "years": [-1600] },
-    { "world": "workshop", "room": "furnace",     "years": [1839] },
-    { "world": "workshop", "room": "stamp press", "years": [1900] }
+    { "world": "woods",    "room": "Rubber Tree", "years": [-1600] },
+    { "world": "workshop", "room": "Furnace",     "years": [1839] },
+    { "world": "workshop", "room": "Stamp Press", "years": [1900] }
   ]
 }
 ```
 
-(Years here are placeholders. `years` lists the year of each possible entry; where a room with
-several sits before it's solved depends on open question 3.)
+(Years here are placeholders. `years` lists the year of each possible entry. A room with several
+sits at its earliest year until it's solved, then at the year of the entry it got.)
 
 ## Journal
 
 1. **Entering** a room whose group the player hasn't seen draws a new, blank group box under or
-   next to the previous one, with one slot per room in the group, ordered by `year`.
-2. **Solving** a room animates its entry into its reserved slot.
+   next to the previous one, one line per room in the group, ordered by `year`. The lines stay
+   blank.
+2. **Solving** a room animates its entry onto its reserved line. An ungrouped entry is written
+   loose between the boxes.
 3. **Completing** a group redraws its box in a darker shade, flashes it, and writes the group's
    name at the top.
-4. **Clicking** an entry opens one of the room's `links` at random in a new tab.
+4. **Clicking** an entry opens one of the room's `links` at random in a new tab, every time.
 
 ## Map
 
@@ -255,24 +438,31 @@ several sits before it's solved depends on open question 3.)
 | `wall` | a solid line |
 | `boundary` | a double line |
 | a missing side | nothing: white space |
+| a door's direction | a small black compass letter (N, E, S, W) at that side |
+| a door that appeared when a newer room took over the square | its compass letter in red, until the player crosses it |
 | a portal | a colored square outline nested inside the square |
 | a one-way door | each room draws its side just inside its own square, so the two sides differ |
 | a solved room | its `drawing`, inked stroke by stroke |
 
 Clicking an inked square scrolls the journal to that room's entry.
 
+**Line drawing.** Plain CSS, no library. Each stroked shape gets `pathLength="1"`, which lets CSS
+animate `stroke-dashoffset` from 1 to 0 without measuring anything. Fills don't animate, so
+drawings must be line art with strokes and no fill. A library like Vivus is tech debt, for when a
+drawing needs its strokes timed one after another like a pen.
+
 ## Reveal sequence
 
 On a solve:
 
 1. The map draws the room's `drawing`.
-2. The journal handwrites the room's entry into its slot.
+2. The journal handwrites the room's entry onto its line.
 3. If that completes the group, the group box darkens, flashes, and gets its name.
 
 ## Inventory strip
 
-A strip across the top of the journal and map, listing the inventory. Word or drawing: open
-question 12.
+A strip across the top of the journal and map. Each item shows its `drawing`, its name underneath,
+and its count when it's more than one.
 
 # On screen
 
@@ -286,6 +476,15 @@ question 12.
 
 Desktop only.
 
+## Room builder
+
+| when | shows |
+|------|-------|
+| always | the verb dictionary, as suggestions |
+| above every text box | in small gray text: "Is this a clue? Remember: every variant has to carry the clues." |
+| on submit, for a field with `"is_clue": true` and more than one option | "You made multiple options in this field and it's marked clue. Do they all give the same clue, no matter which variation the player gets?" Yes or no; the author's answer stands |
+| on submit | the checks above |
+
 # Server
 
 **Proposed** locations and routes:
@@ -294,7 +493,10 @@ Desktop only.
 |-------|-------|
 | world files | `Hello_Eliza/Content/Cave/worlds/<world>.json` |
 | verb dictionary | `Hello_Eliza/Content/Cave/verbs.json` |
+| engine | `Hello_Eliza/Content/Cave/engine.json` |
+| settings | `Hello_Eliza/Content/Cave/settings.json` |
 | one world | `GET /api/cave/worlds/{world}` |
+| the dictionary, engine, and settings | `GET /api/cave/game` |
 | the group index | `GET /api/cave/groups` |
 
 # Example: the first room
@@ -304,20 +506,23 @@ Desktop only.
   "world": "house",
   "rooms": [
     {
-      "name": "Front of House",
-      "coords": [[0, 0]],
-      "text": "You are standing in an open namespace west of a white villa, with a boarded front door. There is a small memory partition here.",
-      "drawing": "<the journal>.svg",
-      "gives": "journal",
-      "doors": { "N": { "kind": "door" } },
+      "name": "West of House",
+      "coord": [0, 0],
+      "text": "You are standing in an open field west of a white house, with a boarded front door. There is a small mailbox here.",
+      "looks": [
+        { "nouns": ["mailbox", "box"], "text": "A black mailbox with a red flag. The number on it is 2112, and someone has painted MEMORY on its side in careful white letters." }
+      ],
+      "drawing": "rooms/west-of-house.svg",
+      "gives": { "item": "journal", "count": 1, "max": 1, "drawing": "items/journal.svg" },
+      "doors": { "E": { "kind": "door" } },
       "triggers": [
-        { "verbs": ["open"], "nouns": ["mailbox", "partition", "box"], "say": "<what they find>", "solves": true }
+        { "verbs": ["open"], "nouns": ["mailbox", "box"], "say": "<what they find>", "solves": true }
       ],
       "journal": {
         "entries": [
           { "year": 1852, "who": "Anthony Trollope", "what": "the letter-receiving pillar", "summary": "<...>" },
           { "year": 1915, "who": "Roy Joroleman", "what": "the tunnel mailbox with a red flag", "summary": "<...>" },
-          { "year": 1977, "who": "Anderson, Blank, Daniels, and Lebling", "what": "Zork", "summary": "<...>" }
+          { "year": 1977, "who": "MIT's Dynamic Modeling Group", "what": "Zork", "summary": "<...>" }
         ],
         "links": [
           "https://en.wikipedia.org/wiki/Pillar_box",
