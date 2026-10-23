@@ -124,6 +124,8 @@ Two more the JSON exposed:
 1. Should the E door wait for the map? house.json says yes, so nobody leaves before the game starts.
 2. Should `open door` (or pulling the boards) also open Front of House? house.json takes only a
    knock.
+   **Answered in round 2:** the door opens easily at any kind of attempt, and the Silence is what
+   you hear when it opens.
 3. The jar's square needs a name. house.json says "Front Room."
 4. Bennet's group: house.json says "atmospheric electricity," the subject of his book's title, and
    where the jar goes when it's carried up a tree or a balloon.
