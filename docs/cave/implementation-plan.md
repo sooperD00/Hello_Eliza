@@ -27,6 +27,7 @@ house, and makes the gold leaves jump apart. The map and the journal record it.
 2. **One matcher.** Pull the rule matcher out of zork.js into its own file (housekeeping already has
    this item), and grow it to the cave's trigger rules: whole words, dictionary synonyms, noun
    groups, phrases, and regex. The homepage and the cave both use it. Tested with `node --test`.
+   The contract is in interface-spec.md, Matching.
 3. **Content files, served static.** house.json, verbs.json, and an engine.json (start square,
    commands, responses, easter eggs), under `wwwroot/cave/`. No API routes yet; the first one comes
    with the group index in Phase 1.

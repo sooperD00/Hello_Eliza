@@ -174,18 +174,63 @@ and every listed thing must hold.
 | `say` | text | shown in the terminal when it fires |
 | `solves` | bool | firing this solves the room |
 
-**When it fires.** Matching is case-insensitive and ignores punctuation.
+**When it fires**: see [Matching](#matching), next. The homepage uses the same rules.
 
-| the trigger has | it fires when the input has |
-|-----------------|------------------------------|
-| `verbs` and `nouns` | one of the verbs (or a synonym from the dictionary) **and** one of the nouns, as whole words |
+## Matching
+
+One matcher for the cave and the homepage. It takes what the player typed and a list of rules, and
+says which rule fires. What a rule does when it fires stays with its caller: a trigger's `say` and
+`sets`, a homepage rule's `action` or `reply`. The homepage's side is
+[docs/eliza/interface-spec.md](../eliza/interface-spec.md).
+
+**Proposed** file: `Hello_Eliza/wwwroot/js/matcher.js`, loaded by both pages and tested with
+`node --test`.
+
+### Reading the input
+
+| matched against | the input is |
+|-----------------|--------------|
+| `verbs`, `nouns`, `phrases` | lowercased, punctuation dropped, spaces collapsed |
+| `regex` | lowercased, otherwise as typed. Punctuation stays, so the homepage's `\?$` still works |
+
+A synonym of more than one word ("pick up") matches those words in a row.
+
+### When a rule matches
+
+| the rule has | it matches when the input has |
+|--------------|-------------------------------|
+| `verbs` and `nouns` | one of the verbs (or a dictionary synonym) **and** one of the nouns, as whole words |
+| `verbs` only (**proposed**) | one of the verbs (or a synonym) as a whole word |
 | `nouns` only | one of the nouns as a whole word |
+| `nouns` as a list of lists (**proposed**) | one word from **each** list, plus a verb if the rule has verbs |
 | `phrases` | exactly one of the phrases, as the whole input |
 | `regex` | a match for any pattern, anywhere in the input |
 
-A trigger fires on any of its lists. **Proposed**: when two triggers in a room could fire, the
-first one listed wins, the same rule as the homepage. When a trigger's words match but its
-`requires` doesn't hold, the engine answers with an `unmet` response.
+A rule matches on any of its lists. A homepage rule is a rule with one `regex`: its `match`.
+
+### Which rule fires
+
+1. Rules are checked in the order the caller lists them.
+2. The first rule that matches **and** whose condition holds fires. A trigger's condition is its
+   `requires`; a homepage rule has none. (**Proposed**, round-1.md: the old "first listed wins" let
+   a trigger with unmet `requires` block the triggers after it.)
+3. When rules matched but none held, the matcher says so, and the cave answers with `unmet`.
+4. When nothing matched, the caller decides. The cave answers with `no_match`; the homepage flips
+   its coin between a fallback remark and ASCII art.
+
+### What it returns (proposed)
+
+| result | when |
+|--------|------|
+| `{ rule, captures }` | a rule fired. `captures` are its regex groups: `$1` on the homepage, `world` and `color` for portals |
+| `{ unmet: true }` | rules matched, and none held |
+| `null` | nothing matched |
+
+### Before and around it, in the cave (proposed)
+
+- The cave replaces "it" with the last noun the player named, before matching (round-1.md).
+- The cave matches in this order: easter eggs, then the room's triggers, then engine commands, then
+  `no_match` (round-1.md). Engine commands match by the same rules (round-2.md).
 
 ## Journal block
 
