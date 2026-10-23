@@ -1,0 +1,126 @@
+{
+  "world": "house",
+  "rooms": [
+    {
+      "id": "west-of-house",
+      "name": "West of House",
+      "coord": [0, 0],
+      "text": "You are standing in a field. You see a boarded up house, a mailbox, and a clear sky.",
+      "looks": [
+        {
+          "nouns": ["mailbox", "box", "flag"],
+          "text": "You see a black mailbox with a little red flag, a rusty mailbox door, and the mailbox is labeled in white paint: 'memory', with presumably the house number, '2112'."
+        }
+      ],
+      "drawing": "rooms/west-of-house.svg",
+      "doors": {
+        "E": { "kind": "door", "nouns": ["house"], "requires": { "steps": ["map"] } }
+      },
+      "triggers": [
+        {
+          "verbs": ["open"],
+          "nouns": ["mailbox", "box"],
+          "reveals": ["journal"],
+          "say": "This journal seems magical. You don't know how the mechanism works. As you lift the journal to peer more closely at it, a slip of lumpy folded paper falls out onto the ground.",
+          "solves": true
+        },
+        {
+          "verbs": ["take"],
+          "nouns": ["paper", "slip", "map"],
+          "requires": { "solved": ["west-of-house"] },
+          "sets": ["map"],
+          "reveals": ["map"],
+          "say": "The paper unfolds in your hands. It's a map."
+        }
+      ],
+      "journal": {
+        "entries": [
+          {
+            "year": 1665,
+            "who": "Henry Oldenburg",
+            "what": "Philosophical Transactions",
+            "summary": "The Royal Society's secretary printed the letters scientists sent him. It's the oldest science journal still in print."
+          }
+        ],
+        "links": [
+          "https://en.wikipedia.org/wiki/Philosophical_Transactions_of_the_Royal_Society",
+          "https://en.wikipedia.org/wiki/Pillar_box",
+          "https://99percentinvisible.org/article/open-source-icon-rural-americas-classic-metal-mailbox-with-flag-design/",
+          "https://if50.substack.com/p/1977-zork"
+        ]
+      }
+    },
+    {
+      "id": "front-of-house",
+      "name": "Front of House",
+      "coord": [1, 0],
+      "text": "You see that the house is made of bricks, some of which are crumbling or missing. The door is boarded up, but not well.",
+      "doors": {
+        "N": { "kind": "door", "nouns": ["house", "inside", "door"], "requires": { "solved": ["front-of-house"] } },
+        "W": { "kind": "door", "nouns": ["field", "mailbox"] }
+      },
+      "triggers": [
+        {
+          "verbs": ["knock"],
+          "say": "The door opens.",
+          "solves": true
+        },
+        {
+          "verbs": ["touch"],
+          "nouns": ["board", "boards"],
+          "say": "A crow flies overhead."
+        },
+        {
+          "phrases": ["hello", "is anyone there", "is anybody there", "is there anybody there", "anyone home", "anybody home"],
+          "requires": { "solved": ["front-of-house"] },
+          "say": "*There is a two-fold Silence*. You hear the rush of the sea and a wave crashing on the shore. But inside you see only a normal, though dimly-lit, room."
+        }
+      ],
+      "journal": {
+        "links": ["https://poets.org/poem/silence-4"]
+      }
+    },
+    {
+      "id": "gold-leaf-jar",
+      "name": "Front Room",
+      "coord": [1, 1],
+      "text": "There is a small, sturdy, wooden desk. On top of it is a metal box, with a row of dials and 3 ports. One of the ports holds the jack of one side of an electrical cord. A glass jar sits beside it, sealed with a thick rubber stopper, and with a brass rod sticking straight up through the stopper.",
+      "looks": [
+        {
+          "nouns": ["jar", "glass", "foil", "gold", "ribbons"],
+          "text": "Inside the jar are two impossibly thin ribbons of gold foil hanging side by side. You hear a hum from the metal box, and the electrical cord shakes."
+        },
+        {
+          "nouns": ["cord", "wire", "cable", "tip"],
+          "text": "One side of the cord is connected to the metal box with the knobs. The other end exposes a metal tip."
+        }
+      ],
+      "drawing": "rooms/gold-leaf-jar.svg",
+      "takeable": { "item": "jar", "count": 1, "max": 1, "drawing": "items/jar.svg" },
+      "doors": {
+        "S": { "kind": "door", "nouns": ["outside", "out", "door"] }
+      },
+      "triggers": [
+        {
+          "verbs": ["touch", "connect"],
+          "nouns": [["tip", "cord", "wire", "cable"], ["rod", "brass"]],
+          "say": "You hear a hum and a crack, and the 2 foils in the jar move apart.",
+          "solves": true
+        }
+      ],
+      "journal": {
+        "group": "atmospheric electricity",
+        "entries": [
+          {
+            "year": 1787,
+            "who": "Abraham Bennet",
+            "what": "New Experiments on Electricity",
+            "summary": "Two gold leaves given the same charge push apart. Bennet called it the most sensible electrometer yet constructed.",
+            "long_text": "New Experiments on Electricity, wherein the causes of THUNDER and LIGHTNING as well as the constant state of Pofitive or negative Electricity in the Air or Clouds, are explained; with Experiments on Clouds of Powders and Vapours artificially diffused in the air. Also a description of A DOUBLER of ELECTRICITY, and of the most SENSIBLE ELECTROMETER YET CONSTRUCTED, with other New Experiments and Difcoveries in the Science, illustrated by explanatory plates."
+          }
+        ],
+        "links": ["https://en.wikipedia.org/wiki/Abraham_Bennet#/media/File:Bennet-1.jpg"]
+      }
+    }
+  ]
+}
