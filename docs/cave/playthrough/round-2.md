@@ -1,8 +1,9 @@
 # Cave play-through, round 2
 
 Claude played a strict engine that read only [house.json](house.json), [verbs.json](verbs.json), and
-the docs. The player was Crawford, typing through Nicole: he'd heard of Zork but never played it,
-and nobody told him the command words. Nicole fixed three bugs in the JSON mid-round, and the
+the docs. The players were Crawford, who'd heard of Zork but never played it, and
+Oscar, 6, who took over in the jar room. Both typed through Nicole, and nobody told them the command
+words. Nicole fixed three bugs in the JSON mid-round, and the
 commands were replayed on the fixed files.
 
 ## Transcript
@@ -90,17 +91,23 @@ Each is a rule the engine needs and the spec doesn't have yet.
 
 ## What a newcomer showed
 
-- **Missing words, not grammar.** He typed full sentences: "Can I pull off the boards?", "I would
+- **Missing words, not grammar.** They typed full sentences: "Can I pull off the boards?", "I would
   open the box", "Hold the rod from the jar near the wire." Whole-word matching handled every one
   whose words were on a list. The failures were all words the author hadn't listed.
-- **The quotes don't steer.** 5 of his 13 turns got a `no_match` quote. To someone who knows the
-  game they're a wink; to a newcomer they read as the game ignoring him. He had three dead turns
+- **The quotes don't steer.** 5 of their 13 turns got a `no_match` quote. To someone who knows the
+  game they're a wink; to a newcomer they read as the game ignoring you. Crawford had three dead turns
   at the door, and the helper waits for 10 turns or 3 minutes.
-- **No reason to be here.** His second command was "Why am I here," and nothing answers it.
-- **He went for the box first.** The jar room names six things: desk, box, dials, ports, stopper,
-  rod. Only the jar and the cord answer to looking.
-- **Noun groups held.** He solved the jar with a sentence nobody wrote for it.
+- **No reason to be here.** Crawford's second command was "Why am I here," and nothing answers it.
+- **Oscar went for the box first.** The jar room names six things: desk, box, dials, ports, stopper,
+  rod. Only the jar and the cord answer to looking. After the jar, he wanted to "visit the lady in
+  the house." There's no lady, and nothing would have answered.
+- **Noun groups held.** The jar was solved with a sentence nobody wrote for it.
 - **A group of one completes at once.** The jar's group got its title the moment it was solved.
+
+## Decided after the round
+
+- Beginner help comes mostly from more options, written into the first rooms directly. Common
+  questions like "why am I here" get a real answer there, not a quote.
 
 ## Lesson for the author
 
