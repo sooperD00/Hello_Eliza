@@ -2,7 +2,7 @@
 
 Claude played a strict engine that read only [house.json](house.json), [verbs.json](verbs.json), and
 the docs. The players were Crawford, who'd heard of Zork but never played it, and
-Oscar, 6, who took over in the jar room. Both typed through Nicole, and nobody told them the command
+Oscar, 6, who tried to open the box in the jar room. Both typed through Nicole, and nobody told them the command
 words. Nicole fixed three bugs in the JSON mid-round, and the
 commands were replayed on the fixed files.
 
