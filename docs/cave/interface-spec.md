@@ -45,19 +45,20 @@ Anywhere a player reads text (`text`, `say`, a `looks` entry), the value can tak
 
 ## Room
 
-A room has two halves: the place, and its journal. Its ID is its world plus its `name`.
+A room has two halves: the place, and its journal.
 
 ### The place
 
 | field | type | required | meaning |
 |-------|------|----------|---------|
+| `id` | string | yes | unique in the game; saved progress records it, so renaming a room is safe; **proposed** format: lowercase words and hyphens, `west-of-house` |
 | `name` | string | yes | the room's title, shown in the terminal; unique in its world |
 | `coord` | `[x, y]` | yes | its one square |
 | `appears` | `{ "requires": requires }` | no | omit it to have the room from the start; a room that takes over a square requires the old room in `solved` |
 | `text` | text | yes | what the terminal shows on arrival, and again on `look` |
 | `looks` | list of looks | no | what you see when you look at something here |
-| `drawing` | path to an `.svg` | no | inked on the map when the room is solved; strokes only; replaces any earlier room's drawing in that square |
-| `gives` | gift | no | goes into the inventory when the room is solved |
+| `drawing` | path to an `.svg` | no | inked on the map when the room is solved; strokes only; replaces any earlier room's drawing in that square; omit it to get a default drawing |
+| `takeable` | takeable | no | what the player can `take` here once the room is solved |
 | `takes` | `{ "<item>": count }` | no | leaves the inventory when the room is solved |
 | `doors` | edges | no | the four sides; a missing side is blank and closed |
 | `portals` | list of portals | no | ways up, down, or elsewhere, drawn inside the square |
@@ -80,16 +81,19 @@ A room has two halves: the place, and its journal. Its ID is its world plus its 
 The engine answers "look at", "examine", and "x" with these. A thing with no entry gets a no-match
 response.
 
-### Gift
+### Takeable
 
 ```json
-"gives": { "item": "latex", "count": 3, "max": 3, "drawing": "items/latex.svg" }
+"takeable": { "item": "latex", "count": 3, "max": 3, "drawing": "items/latex.svg" }
 ```
+
+Nothing goes into the inventory by itself. Once the room is solved, `take latex` (or a dictionary
+synonym) moves the items in, once.
 
 | field | type | meaning |
 |-------|------|---------|
-| `item` | string | the item's name; the room that gives it owns the name |
-| `count` | number | how many; default 1 |
+| `item` | string | the item's name; the room that offers it owns the name |
+| `count` | number | how many one take gets; default 1 |
 | `max` | number | the most a player can hold; extra is dropped; **proposed** default 1 |
 | `drawing` | path to an `.svg` | its picture in the inventory strip; colored and solid, unlike map drawings |
 
@@ -99,13 +103,13 @@ The same shape everywhere: worlds, rooms, edges, portals, and triggers. Every fi
 and every listed thing must hold.
 
 ```json
-{ "items": { "latex": 2 }, "solved": ["West of House", "woods/Rubber Tree"], "steps": ["charged"] }
+{ "items": { "latex": 2 }, "solved": ["west-of-house", "rubber-tree"], "steps": ["charged"] }
 ```
 
 | field | holds when |
 |-------|------------|
 | `items` | the inventory has at least that many of each; **proposed**: a plain list like `["latex"]` means one of each |
-| `solved` | each named room has been solved; a bare name means this world, **proposed** `"world/name"` for another |
+| `solved` | each room, by `id`, has been solved, in any world |
 | `steps` | each step was set earlier **in this same room** (by a trigger's `sets`) |
 
 ## Edges
@@ -170,18 +174,63 @@ and every listed thing must hold.
 | `say` | text | shown in the terminal when it fires |
 | `solves` | bool | firing this solves the room |
 
-**When it fires.** Matching is case-insensitive and ignores punctuation.
+**When it fires**: see [Matching](#matching), next. The homepage uses the same rules.
 
-| the trigger has | it fires when the input has |
-|-----------------|------------------------------|
-| `verbs` and `nouns` | one of the verbs (or a synonym from the dictionary) **and** one of the nouns, as whole words |
+## Matching
+
+One matcher for the cave and the homepage. It takes what the player typed and a list of rules, and
+says which rule fires. What a rule does when it fires stays with its caller: a trigger's `say` and
+`sets`, a homepage rule's `action` or `reply`. The homepage's side is
+[docs/eliza/interface-spec.md](../eliza/interface-spec.md).
+
+**Proposed** file: `Hello_Eliza/wwwroot/js/matcher.js`, loaded by both pages and tested with
+`node --test`.
+
+### Reading the input
+
+| matched against | the input is |
+|-----------------|--------------|
+| `verbs`, `nouns`, `phrases` | lowercased, punctuation dropped, spaces collapsed |
+| `regex` | lowercased, otherwise as typed. Punctuation stays, so the homepage's `\?$` still works |
+
+A synonym of more than one word ("pick up") matches those words in a row.
+
+### When a rule matches
+
+| the rule has | it matches when the input has |
+|--------------|-------------------------------|
+| `verbs` and `nouns` | one of the verbs (or a dictionary synonym) **and** one of the nouns, as whole words |
+| `verbs` only (**proposed**) | one of the verbs (or a synonym) as a whole word |
 | `nouns` only | one of the nouns as a whole word |
+| `nouns` as a list of lists (**proposed**) | one word from **each** list, plus a verb if the rule has verbs |
 | `phrases` | exactly one of the phrases, as the whole input |
 | `regex` | a match for any pattern, anywhere in the input |
 
-A trigger fires on any of its lists. **Proposed**: when two triggers in a room could fire, the
-first one listed wins, the same rule as the homepage. When a trigger's words match but its
-`requires` doesn't hold, the engine answers with an `unmet` response.
+A rule matches on any of its lists. A homepage rule is a rule with one `regex`: its `match`.
+
+### Which rule fires
+
+1. Rules are checked in the order the caller lists them.
+2. The first rule that matches **and** whose condition holds fires. A trigger's condition is its
+   `requires`; a homepage rule has none. (**Proposed**, round-1.md: the old "first listed wins" let
+   a trigger with unmet `requires` block the triggers after it.)
+3. When rules matched but none held, the matcher says so, and the cave answers with `unmet`.
+4. When nothing matched, the caller decides. The cave answers with `no_match`; the homepage flips
+   its coin between a fallback remark and ASCII art.
+
+### What it returns (proposed)
+
+| result | when |
+|--------|------|
+| `{ rule, captures }` | a rule fired. `captures` are its regex groups: `$1` on the homepage, `world` and `color` for portals |
+| `{ unmet: true }` | rules matched, and none held |
+| `null` | nothing matched |
+
+### Before and around it, in the cave (proposed)
+
+- The cave replaces "it" with the last noun the player named, before matching (round-1.md).
+- The cave matches in this order: easter eggs, then the room's triggers, then engine commands, then
+  `no_match` (round-1.md). Engine commands match by the same rules (round-2.md).
 
 ## Journal block
 
@@ -212,7 +261,7 @@ first one listed wins, the same rule as the homepage. When a trigger's words mat
 
 All optional. An entry with none of them writes nothing.
 
-**Proposed** length rule (open question 6), so each entry fits its one line:
+Length rule, so each entry fits its one line:
 
 | part | limit | shown |
 |------|-------|-------|
@@ -222,24 +271,22 @@ All optional. An entry with none of them writes nothing.
 ## Verb dictionary
 
 One file for the whole game. The keys are the verbs rooms use and the helper shows; the values are
-the synonyms players can also type.
+the synonyms players can also type. It starts with what the first rooms need and grows with the
+game.
 
 ```json
 {
-  "open":  ["lift", "unlatch", "pry"],
-  "take":  ["get", "grab", "pick up"],
-  "read":  ["cat"],
-  "touch": ["tap", "poke", "feel"],
-  "turn":  ["twist", "rotate", "dial"],
-  "push":  ["press", "shove"],
-  "pull":  ["yank", "tug"],
-  "put":   ["place", "insert"],
-  "climb": ["scale"],
-  "light": ["ignite", "kindle"]
+  "open":    ["lift", "unlatch", "pry"],
+  "take":    ["get", "grab", "pick up"],
+  "read":    [],
+  "touch":   ["tap", "poke", "feel"],
+  "measure": ["ruler"],
+  "push":    ["press", "shove"],
+  "pull":    ["yank", "tug"]
 }
 ```
 
-(A starting list, drawn from Zork's own verbs.)
+(A starting guess; the play-through settles it.)
 
 ## Engine
 
@@ -247,22 +294,21 @@ Game-wide, written once. **Proposed** file: `engine.json`.
 
 ### Commands
 
-Zork's commands and shortcuts, plus Unix and vi shortcuts that teach real tools.
+Plain language first. Shortcuts (`n`, `l`, `i`), Unix commands (`ls`, `cd`, `pwd`) and vi commands
+come later, each taught by a puzzle (tech debt). The minimum set gets settled in the play-through;
+these are the candidates.
 
 | command | also | does |
 |---------|------|------|
-| `north`, `south`, `east`, `west` | `n` `s` `e` `w`, `go <dir>`, `walk <dir>`; vi `k` `j` `l` `h` (open question 2) | crosses that side's door |
-| `cd ..` | `back` | goes back to the last square |
-| `up`, `down` | `u`, `d`, `climb` | uses a portal, if the square has exactly one |
-| `look` | `l`, `ls` | shows the room's `text` again |
-| `look at <thing>` | `examine <thing>`, `x <thing>` | shows that thing's `looks` text |
-| `inventory` | `i` | lists what you carry |
-| `read <item>` | `cat <item>` | open question 3 |
-| `where am I` | `pwd` | names the world and the square |
-| `help` | `?`, `man`, `:help` | lists these commands and the dictionary's verbs |
-| `again` | `g` | repeats the last input |
-| `restart` | | wipes progress (open question 5) |
-| `quit` | `q`, `:q`, `exit` | **proposed**: back to the homepage terminal |
+| `go north`, `go south`, `go east`, `go west` | `north`, `walk north` | crosses that side's door |
+| `look` | | shows the room's `text` again |
+| `look at <thing>` | `examine <thing>` | shows that thing's `looks` text |
+| `take <item>` | dictionary synonyms | moves a solved room's `takeable` into the inventory |
+| `inventory` | | lists what you carry |
+| `read journal` | | in West of House, opens the journal; elsewhere, the journal is already open |
+| `help` | | lists these commands and the dictionary's verbs |
+| `drop <item>` | | answers with the `drop` response, flashes the item once in the inventory strip, and keeps it |
+| `restart` | `reset` | *poof*: says so, forgets all progress, and reloads, like the homepage |
 
 ### Portal phrases
 
@@ -304,7 +350,7 @@ One is picked at random each time.
     "Was there anything more exciting in life than seeking answers?"
   ],
   "no_match": [
-    "Pan Galactic Garble Blasters!",
+    "Pan Galactic Gargle Blasters!",
     "My hands are dirty too, what are you afraid of?",
     "You dead awhile there, mon.",
     "Probably got him on ice. Thaw when needed.",
@@ -317,25 +363,31 @@ One is picked at random each time.
     "I can only dance in my chains.",
     "In the face of madness, rationality was powerless",
     "I have a bad feeling about this"
-  ]
+  ],
+  "drop": "Oops, you dropped this. Let me put that back for you."
 }
 ```
 
 ### Easter eggs
 
-Triggers in the trigger format, checked before the room's own. Answers are open question 7.
+Triggers in the trigger format, checked before the room's own. Each one opens the page about it in a
+new tab.
 
 ```json
 "easter_eggs": [
-  { "phrases": ["xyzzy"], "say": "<...>" },
-  { "phrases": ["plugh"], "say": "<...>" },
-  { "phrases": ["hello sailor"], "say": "<...>" },
-  { "phrases": ["zork"], "say": "<...>" },
-  { "regex": ["warren robinett", "\\brobinett\\b"], "say": "<...>" }
+  { "phrases": ["xyzzy"], "opens": "https://en.wikipedia.org/wiki/Xyzzy_(computing)" },
+  { "phrases": ["plugh"], "opens": "https://en.wikipedia.org/wiki/Colossal_Cave_Adventure" },
+  { "phrases": ["hello sailor"], "opens": "https://foldoc.org/hello,+sailor!" },
+  { "phrases": ["zork"], "opens": "https://en.wikipedia.org/wiki/Zork" },
+  { "regex": ["warren robinett", "\\brobinett\\b"], "opens": "https://en.wikipedia.org/wiki/Warren_Robinett" }
 ]
 ```
 
-(Zork answers `xyzzy` with "A hollow voice says 'fool'.")
+| field | meaning |
+|-------|---------|
+| `opens` | a URL opened in a new tab when the egg fires |
+
+("hello sailor" has no Wikipedia page; the link is its Jargon File entry.)
 
 ## Settings
 
@@ -360,15 +412,16 @@ Run when a world loads, in the room builder, and later in CI.
 | check | if it fails |
 |-------|-------------|
 | world names are unique | refuse to load the second one |
+| room `id`s are unique in the game | refuse to load the room |
 | room names are unique within a world | refuse to load the room |
 | one room per square, unless a later room `appears` after the earlier one is solved | refuse to load the later room |
-| every `solved` names a room that exists | warn |
+| every `solved` names a room `id` that exists | warn |
 | every required or taken item is given by some room | warn |
 | rooms that give the same item agree on its `max` and `drawing` | warn |
 | `count` ≤ `max` | warn |
 | exactly one trigger per room has `"solves": true` | refuse to load the room |
 | trigger verbs are in the dictionary | warn |
-| saved progress names rooms that no longer exist | warn (a rename forgets progress) |
+| saved progress names room `id`s that no longer exist | warn |
 
 # Saved
 
@@ -384,7 +437,7 @@ Saved in the browser (`localStorage`), kept across visits. **Proposed** key: `ca
 | `inventory` | `{ "<item>": count }` |
 | `steps` | steps set, per room |
 | `journalPicks` | which entry each solved room got |
-| `crossed` | doors crossed, for the red compass letters |
+| `crossed` | doors crossed, per room and side, for the compass letters |
 
 ## Your own files
 
@@ -407,9 +460,9 @@ Built by the server from every world file. **Proposed** route: `GET /api/cave/gr
 ```json
 {
   "rubber stopper": [
-    { "world": "woods",    "room": "Rubber Tree", "years": [-1600] },
-    { "world": "workshop", "room": "Furnace",     "years": [1839] },
-    { "world": "workshop", "room": "Stamp Press", "years": [1900] }
+    { "id": "rubber-tree", "world": "woods",    "years": [-1600] },
+    { "id": "furnace",     "world": "workshop", "years": [1839] },
+    { "id": "stamp-press", "world": "workshop", "years": [1900] }
   ]
 }
 ```
@@ -438,8 +491,7 @@ sits at its earliest year until it's solved, then at the year of the entry it go
 | `wall` | a solid line |
 | `boundary` | a double line |
 | a missing side | nothing: white space |
-| a door's direction | a small black compass letter (N, E, S, W) at that side |
-| a door that appeared when a newer room took over the square | its compass letter in red, until the player crosses it |
+| a door's direction | a small compass letter (N, E, S, W) at that side: red until the player has crossed it, then black |
 | a portal | a colored square outline nested inside the square |
 | a one-way door | each room draws its side just inside its own square, so the two sides differ |
 | a solved room | its `drawing`, inked stroke by stroke |
@@ -448,8 +500,12 @@ Clicking an inked square scrolls the journal to that room's entry.
 
 **Line drawing.** Plain CSS, no library. Each stroked shape gets `pathLength="1"`, which lets CSS
 animate `stroke-dashoffset` from 1 to 0 without measuring anything. Fills don't animate, so
-drawings must be line art with strokes and no fill. A library like Vivus is tech debt, for when a
-drawing needs its strokes timed one after another like a pen.
+drawings must be line art with strokes and no fill; hatching and cross-hatching do the shading. A
+library like Vivus is tech debt, for when a drawing needs its strokes timed one after another like a
+pen.
+
+**Default drawings.** A room with no `drawing` gets one from the default folder. **Proposed**: picked
+by the room's `id`, so it's the same drawing every time, for every player.
 
 ## Reveal sequence
 
@@ -495,6 +551,7 @@ Desktop only.
 | verb dictionary | `Hello_Eliza/Content/Cave/verbs.json` |
 | engine | `Hello_Eliza/Content/Cave/engine.json` |
 | settings | `Hello_Eliza/Content/Cave/settings.json` |
+| default drawings | `Hello_Eliza/wwwroot/cave/drawings/default/*.svg` |
 | one world | `GET /api/cave/worlds/{world}` |
 | the dictionary, engine, and settings | `GET /api/cave/game` |
 | the group index | `GET /api/cave/groups` |
@@ -506,6 +563,7 @@ Desktop only.
   "world": "house",
   "rooms": [
     {
+      "id": "west-of-house",
       "name": "West of House",
       "coord": [0, 0],
       "text": "You are standing in an open field west of a white house, with a boarded front door. There is a small mailbox here.",
@@ -513,10 +571,10 @@ Desktop only.
         { "nouns": ["mailbox", "box"], "text": "A black mailbox with a red flag. The number on it is 2112, and someone has painted MEMORY on its side in careful white letters." }
       ],
       "drawing": "rooms/west-of-house.svg",
-      "gives": { "item": "journal", "count": 1, "max": 1, "drawing": "items/journal.svg" },
       "doors": { "E": { "kind": "door" } },
       "triggers": [
-        { "verbs": ["open"], "nouns": ["mailbox", "box"], "say": "<what they find>", "solves": true }
+        { "verbs": ["open"], "nouns": ["mailbox", "box"], "sets": ["opened"], "say": "<what they find>" },
+        { "verbs": ["read"], "nouns": ["journal"], "requires": { "steps": ["opened"] }, "say": "<...>", "solves": true }
       ],
       "journal": {
         "entries": [
@@ -534,3 +592,5 @@ Desktop only.
   ]
 }
 ```
+
+(Where Front of House and the jar room sit, and what's in them, gets settled in the play-through.)

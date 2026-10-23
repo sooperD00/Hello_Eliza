@@ -1,0 +1,14 @@
+{
+  "go":      ["walk", "head", "enter", "move", "run"],
+  "look":    ["look at", "examine", "x", "inspect", "check", "follow", "trace"],
+  "open":    ["lift", "unlatch", "pry", "look in", "look inside", "search"],
+  "take":    ["get", "grab", "pick up"],
+  "read":    [],
+  "touch":   ["tap", "poke", "feel"],
+  "connect": ["attach", "hook up", "plug", "put", "hold", "bring"],
+  "knock":   ["rap", "bang", "pound"],
+  "break":   ["kick", "smash", "force", "remove", "rip off", "tear off"],
+  "measure": ["ruler"],
+  "push":    ["press", "shove"],
+  "pull":    ["yank", "tug"]
+}
