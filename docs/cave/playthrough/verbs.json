@@ -7,6 +7,7 @@
   "touch":   ["tap", "poke", "feel"],
   "connect": ["attach", "hook up", "plug", "put", "hold", "bring"],
   "knock":   ["rap", "bang", "pound"],
+  "break":   ["kick", "smash", "force", "remove", "rip off", "tear off"],
   "measure": ["ruler"],
   "push":    ["press", "shove"],
   "pull":    ["yank", "tug"]
