@@ -74,7 +74,7 @@
           "verbs": ["knock", "open", "pull", "push", "break"],
           "nouns": ["door", "boards", "board", "house"],
           "phrases": ["knock", "knock knock", "hello", "is anyone there", "is anybody there", "is there anybody there", "anyone home", "anybody home"],
-          "say": "The door opens.",
+          "say": "The door opens. *There is a two-fold Silence*. You hear the rush of the sea and a wave crashing on the shore. But inside you see only a normal, though dimly-lit, room.",
           "solves": true
         }
       ],
